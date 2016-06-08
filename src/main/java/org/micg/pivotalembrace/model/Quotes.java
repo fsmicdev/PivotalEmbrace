@@ -15,7 +15,7 @@ public class Quotes {
     public Quotes() {
     }
 
-    public Quotes(String quote, String person) {
+    public Quotes(final String quote, final String person) {
         this.quote = quote;
         this.person = person;
     }
@@ -31,7 +31,7 @@ public class Quotes {
         return person;
     }
 
-    public void setPerson(String person) {
+    public void setPerson(final String person) {
         this.person = person;
     }
 
@@ -39,7 +39,7 @@ public class Quotes {
         return _id;
     }
 
-    public void setId(Long _id) {
+    public void setId(final Long _id) {
         this._id = _id;
     }
 
@@ -47,7 +47,7 @@ public class Quotes {
         return quote;
     }
 
-    public void setQuote(String quote) {
+    public void setQuote(final String quote) {
         this.quote = quote;
     }
 }
