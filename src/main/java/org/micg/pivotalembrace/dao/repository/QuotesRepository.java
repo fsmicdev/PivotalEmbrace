@@ -11,6 +11,8 @@ public interface QuotesRepository extends MongoRepository<Quotes, Long> {
 
     List<Quotes> findAll();
 
+    Quotes findOne(final Long id);
+
     List<Quotes> findByPerson(final String person);
 
     Quotes save(final Quotes quotes);

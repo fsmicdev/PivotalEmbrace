@@ -40,6 +40,22 @@ public class QuotesAPI {
     }
 
     @GET
+    @ApiOperation("Get a quote by its unique id.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned quote via unique id."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response getQuote(@ApiParam(value = "Unique id of quote.", required = true)
+                             @QueryParam("id") final Long id) {
+        try {
+            return Response.ok(quotesService.getQuote(id)).build();
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @GET
     @Path("/person/quotecount")
     @ApiOperation("Get all authors and authors quote count.  [N.B. This statistical/summary data " +
                   "will be client-cached for 1 hour].")

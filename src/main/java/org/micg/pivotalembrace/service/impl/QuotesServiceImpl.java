@@ -45,6 +45,15 @@ public class QuotesServiceImpl implements QuotesService {
     }
 
     @Override
+    public Quotes getQuote(final Long id) throws ServiceException {
+        try {
+            return quotesRepository.findOne(id);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public List<Quotes> getQuotesByPerson(final String person) throws ServiceException {
         try {
             if (StringUtils.isEmpty(person)) {
