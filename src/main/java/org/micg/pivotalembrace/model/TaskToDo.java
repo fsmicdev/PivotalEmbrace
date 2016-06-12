@@ -33,11 +33,11 @@ public class TaskToDo {
                 _id, task, taskPriority, toDoByDate, outstandingTask);
     }
 
-    public Long get_id() {
+    public Long getId() {
         return _id;
     }
 
-    public void set_id(final Long _id) {
+    public void setId(final Long _id) {
         this._id = _id;
     }
 

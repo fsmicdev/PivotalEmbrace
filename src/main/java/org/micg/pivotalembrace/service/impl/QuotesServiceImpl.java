@@ -22,9 +22,9 @@ import static org.micg.pivotalembrace.model.ErrorCode.INVALID_PARAMS;
 @Service("quotesService")
 public class QuotesServiceImpl implements QuotesService {
 
-    private Logger logger = LoggerFactory.getLogger(QuotesServiceImpl.class);
-
     private static final String QUOTES_SEQ_KEY = "quotesid";
+
+    private Logger logger = LoggerFactory.getLogger(QuotesServiceImpl.class);
 
     @Autowired
     private QuotesRepository quotesRepository;
@@ -90,14 +90,14 @@ public class QuotesServiceImpl implements QuotesService {
 
     @Override
     public Quotes save(final String quoteText, final String author) {
-        final Long nextIdVal = sequenceDao.getNextSequenceId(QUOTES_SEQ_KEY);
+        final Quotes quote = new Quotes();
 
+        final Long nextIdVal = sequenceDao.getNextSequenceId(QUOTES_SEQ_KEY);
         logger.info("##### nextIdVal: " + nextIdVal);
 
-        final Quotes quote = new Quotes();
+        quote.setId(nextIdVal);
         quote.setPerson(author);
         quote.setQuote(quoteText);
-        quote.setId(nextIdVal);
 
         return quotesRepository.save(quote);
     }
