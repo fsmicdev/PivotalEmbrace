@@ -26,12 +26,28 @@ public class TaskToDoAPI {
     @ApiOperation("Get all task to dos.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all quotes."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all task to dos."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getAllTaskToDos() {
         try {
             return Response.ok(taskToDoService.getAllTaskToDos(true)).build();
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @GET
+    @ApiOperation("Get a task to do by its unique id.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned task to do via unique id."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response getQuote(@ApiParam(value = "Unique id of task to do.", required = true)
+                             @QueryParam("id") final Long id) {
+        try {
+            return Response.ok(taskToDoService.getTaskToDo(id)).build();
         } catch (final ServiceException se) {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
         }

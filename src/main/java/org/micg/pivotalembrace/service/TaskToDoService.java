@@ -10,5 +10,7 @@ public interface TaskToDoService {
 
     List<TaskToDo> getAllTaskToDos(final boolean outstandingOnly) throws ServiceException;
 
+    TaskToDo getTaskToDo(final Long id) throws ServiceException;
+
     TaskToDo save(final String taskToDoItemText, final TaskPriority taskPriority, final Date taskDueDate) throws ServiceException;
 }

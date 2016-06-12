@@ -31,6 +31,11 @@ public class TaskToDoServiceImpl implements TaskToDoService {
         return taskToDoRepository.findAll();
     }
 
+    @Override
+    public TaskToDo getTaskToDo(final Long id) throws ServiceException {
+        return taskToDoRepository.findOne(id);
+    }
+
     public TaskToDo save(final String taskToDoItemText, final TaskPriority taskPriority, final Date taskDueDate) throws ServiceException {
         final TaskToDo taskToDo = new TaskToDo();
 
