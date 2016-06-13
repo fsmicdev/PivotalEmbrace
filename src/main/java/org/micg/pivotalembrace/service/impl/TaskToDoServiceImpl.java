@@ -29,7 +29,11 @@ public class TaskToDoServiceImpl implements TaskToDoService {
 
     @Override
     public List<TaskToDo> getAllTaskToDos(final boolean outstandingOnly) throws ServiceException {
-        return taskToDoRepository.findAll();
+        try {
+            return taskToDoRepository.findAll();
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -41,16 +45,36 @@ public class TaskToDoServiceImpl implements TaskToDoService {
     public TaskToDo save(final String taskToDoItemText, final TaskPriority taskPriority, final Date taskDueDate) throws ServiceException {
         final TaskToDo taskToDo = new TaskToDo();
 
-        final Long nextIdVal = sequenceDao.getNextSequenceId(TASK_TO_DO_SEQ_KEY);
-        logger.info("##### nextIdVal: " + nextIdVal);
+        try {
+            final Long nextIdVal = sequenceDao.getNextSequenceId(TASK_TO_DO_SEQ_KEY);
+            logger.info("##### nextIdVal: " + nextIdVal);
 
-        taskToDo.setId(nextIdVal);
+            taskToDo.setId(nextIdVal);
+            taskToDo.setTask(taskToDoItemText);
+            taskToDo.setTaskPriority(taskPriority);
+            taskToDo.setToDoByDate(taskDueDate);
+            taskToDo.setOutstandingTask(true);
+
+            return taskToDoRepository.save(taskToDo);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public TaskToDo update(Long id, String taskToDoItemText, TaskPriority taskPriority, Date taskDueDate, Boolean completedFlag) throws ServiceException {
+        final TaskToDo taskToDo = new TaskToDo();
+
+        taskToDo.setId(id);
         taskToDo.setTask(taskToDoItemText);
         taskToDo.setTaskPriority(taskPriority);
         taskToDo.setToDoByDate(taskDueDate);
         taskToDo.setOutstandingTask(true);
 
-        return taskToDoRepository.save(taskToDo);
+        try {
+            return taskToDoRepository.save(taskToDo);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
     }
-
 }

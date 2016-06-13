@@ -13,4 +13,6 @@ public interface TaskToDoService {
     TaskToDo getTaskToDo(final Long id) throws ServiceException;
 
     TaskToDo save(final String taskToDoItemText, final TaskPriority taskPriority, final Date taskDueDate) throws ServiceException;
+
+    TaskToDo update(final Long id, final String taskToDoItemText, final TaskPriority taskPriority, final Date taskDueDate, final Boolean completedFlag) throws ServiceException;
 }

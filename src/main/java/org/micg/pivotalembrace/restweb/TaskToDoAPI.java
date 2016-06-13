@@ -81,4 +81,38 @@ public class TaskToDoAPI {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
         }
     }
+
+    @PUT
+    @Path("/todo/{id}")
+    @ApiOperation("Update an existing To Do item in Pivotal Embrace.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Task ToDo Item was updated."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response updateToDo(
+            @ApiParam(value = "Existing id of to item to update.", required = true)
+            @PathParam(value = "id") final Long id,
+            @ApiParam(value = "Task to item text.", required = true)
+            @QueryParam("taskToDoItemText") final String taskToDoItemText,
+            @ApiParam(value = "Task priority.", required = true)
+            @QueryParam("taskPriority") final TaskPriority taskPriority,
+            @ApiParam(value = "Task Due Date.", required = true)
+            @QueryParam("taskDueDate") final Date taskDueDate,
+            @ApiParam(value = "Has the to do item been completed?", required = true)
+            @QueryParam("completedFlag") final Boolean completedFlag
+    ) {
+        try {
+            final TaskToDo savedToDoItem =
+                    taskToDoService.update(id, taskToDoItemText, taskPriority, taskDueDate, completedFlag);
+
+            if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
+                return Response.status(Response.Status.CREATED).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
 }
