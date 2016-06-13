@@ -19,4 +19,6 @@ public interface QuotesService {
     Map<String, AtomicInteger> getAllAuthorsAndQuoteCount() throws ServiceException;
 
     Quotes save(final String quote, final String author) throws ServiceException;
+
+    Quotes update(final Long id, final String quote, final String author) throws ServiceException;
 }

@@ -89,16 +89,35 @@ public class QuotesServiceImpl implements QuotesService {
     }
 
     @Override
-    public Quotes save(final String quoteText, final String author) {
+    public Quotes save(final String quoteText, final String author) throws ServiceException {
         final Quotes quote = new Quotes();
 
-        final Long nextIdVal = sequenceDao.getNextSequenceId(QUOTES_SEQ_KEY);
-        logger.info("##### nextIdVal: " + nextIdVal);
+        try {
+            final Long nextIdVal = sequenceDao.getNextSequenceId(QUOTES_SEQ_KEY);
+            logger.info("##### nextIdVal: " + nextIdVal);
 
-        quote.setId(nextIdVal);
-        quote.setPerson(author);
+            quote.setId(nextIdVal);
+            quote.setPerson(author);
+            quote.setQuote(quoteText);
+
+            return quotesRepository.save(quote);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Quotes update(final Long id, final String quoteText, final String author) throws ServiceException {
+        final Quotes quote = new Quotes();
+
+        quote.setId(id);
         quote.setQuote(quoteText);
+        quote.setPerson(author);
 
-        return quotesRepository.save(quote);
+        try {
+            return quotesRepository.save(quote);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
     }
 }

@@ -130,4 +130,33 @@ public class QuotesAPI {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
         }
     }
+
+    @PUT
+    @Path("/quote/{id}")
+    @ApiOperation("Update an existing Quote in Pivotal Embrace.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Quote was updated."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response updateQuote(
+            @ApiParam(value = "Existing id of quote to update.", required = true)
+            @PathParam(value = "id") final Long id,
+            @ApiParam(value = "Quoted person (i.e. author).", required = true)
+            @QueryParam("quotedPerson") final String quotedPerson,
+            @ApiParam(value = "Quote text.", required = true)
+            @QueryParam("quoteText") final String quoteText) {
+        try {
+            final Quotes savedQuote =
+                    quotesService.update(id, quoteText, quotedPerson);
+
+            if ((savedQuote != null) && (savedQuote.getId() != null)) {
+                return Response.status(Response.Status.CREATED).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
 }
