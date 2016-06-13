@@ -1,4 +1,4 @@
-package org.micg.pivotalembrace.dao;
+package org.micg.pivotalembrace.dataaccess;
 
 import org.micg.pivotalembrace.exception.BaseErrorException;
 import org.micg.pivotalembrace.model.ErrorCode;

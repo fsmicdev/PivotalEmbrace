@@ -1,6 +1,6 @@
-package org.micg.pivotalembrace.dao.template;
+package org.micg.pivotalembrace.dataaccess.template;
 
-import org.micg.pivotalembrace.dao.PersistenceException;
+import org.micg.pivotalembrace.dataaccess.PersistenceException;
 import org.micg.pivotalembrace.model.Quotes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;

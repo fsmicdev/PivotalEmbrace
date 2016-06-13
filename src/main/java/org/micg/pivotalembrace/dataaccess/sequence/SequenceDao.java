@@ -1,4 +1,4 @@
-package org.micg.pivotalembrace.dao.sequence;
+package org.micg.pivotalembrace.dataaccess.sequence;
 
 import org.micg.pivotalembrace.exception.SequenceException;
 

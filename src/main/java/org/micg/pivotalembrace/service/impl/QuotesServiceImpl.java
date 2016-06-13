@@ -1,10 +1,10 @@
 package org.micg.pivotalembrace.service.impl;
 
-import org.micg.pivotalembrace.dao.PersistenceException;
-import org.micg.pivotalembrace.dao.sequence.SequenceDao;
-import org.micg.pivotalembrace.dao.template.QuotesTemplate;
+import org.micg.pivotalembrace.dataaccess.PersistenceException;
+import org.micg.pivotalembrace.dataaccess.sequence.SequenceDao;
+import org.micg.pivotalembrace.dataaccess.template.QuotesTemplate;
 import org.micg.pivotalembrace.model.Quotes;
-import org.micg.pivotalembrace.dao.repository.QuotesRepository;
+import org.micg.pivotalembrace.dataaccess.repository.QuotesRepository;
 import org.micg.pivotalembrace.service.QuotesService;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.slf4j.Logger;

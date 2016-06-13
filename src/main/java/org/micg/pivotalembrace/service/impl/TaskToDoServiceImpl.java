@@ -1,7 +1,7 @@
 package org.micg.pivotalembrace.service.impl;
 
-import org.micg.pivotalembrace.dao.repository.TaskToDoRepository;
-import org.micg.pivotalembrace.dao.sequence.SequenceDao;
+import org.micg.pivotalembrace.dataaccess.repository.TaskToDoRepository;
+import org.micg.pivotalembrace.dataaccess.sequence.SequenceDao;
 import org.micg.pivotalembrace.model.TaskPriority;
 import org.micg.pivotalembrace.model.TaskToDo;
 import org.micg.pivotalembrace.service.ServiceException;
@@ -27,6 +27,7 @@ public class TaskToDoServiceImpl implements TaskToDoService {
     @Autowired
     private SequenceDao sequenceDao;
 
+    @Override
     public List<TaskToDo> getAllTaskToDos(final boolean outstandingOnly) throws ServiceException {
         return taskToDoRepository.findAll();
     }
@@ -36,6 +37,7 @@ public class TaskToDoServiceImpl implements TaskToDoService {
         return taskToDoRepository.findOne(id);
     }
 
+    @Override
     public TaskToDo save(final String taskToDoItemText, final TaskPriority taskPriority, final Date taskDueDate) throws ServiceException {
         final TaskToDo taskToDo = new TaskToDo();
 

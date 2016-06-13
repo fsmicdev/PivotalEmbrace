@@ -1,4 +1,4 @@
-package org.micg.pivotalembrace.dao.repository;
+package org.micg.pivotalembrace.dataaccess.repository;
 
 import org.micg.pivotalembrace.model.TaskToDo;
 import org.springframework.data.mongodb.repository.MongoRepository;

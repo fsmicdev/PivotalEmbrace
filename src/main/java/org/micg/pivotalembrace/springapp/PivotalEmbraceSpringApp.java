@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.micg.pivotalembrace"})
-@EnableMongoRepositories(basePackages = {"org.micg.pivotalembrace.dao.repository"})
+@EnableMongoRepositories(basePackages = {"org.micg.pivotalembrace.dataaccess.repository"})
 public class PivotalEmbraceSpringApp implements CommandLineRunner {
 
     private Logger log = LoggerFactory.getLogger(PivotalEmbraceSpringApp.class);
