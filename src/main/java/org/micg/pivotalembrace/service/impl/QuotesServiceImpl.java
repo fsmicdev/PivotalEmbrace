@@ -10,6 +10,7 @@ import org.micg.pivotalembrace.service.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -116,6 +117,21 @@ public class QuotesServiceImpl implements QuotesService {
 
         try {
             return quotesRepository.save(quote);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean delete(final Quotes preExistingQuote) throws ServiceException {
+        try {
+            if (preExistingQuote == null) {
+                return false;
+            } else {
+                quotesRepository.delete(preExistingQuote);
+
+                return true;
+            }
         } catch (final Exception e) {
             throw new ServiceException(e);
         }

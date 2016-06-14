@@ -136,7 +136,8 @@ public class QuotesAPI {
     @ApiOperation("Update an existing Quote in Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Quote was updated."),
+            @ApiResponse(code = 200, message = "Quote was updated."),
+            @ApiResponse(code = 404, message = "The specific quote was not found."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response updateQuote(
@@ -147,13 +148,46 @@ public class QuotesAPI {
             @ApiParam(value = "Quote text.", required = true)
             @QueryParam("quoteText") final String quoteText) {
         try {
-            final Quotes savedQuote =
-                    quotesService.update(id, quoteText, quotedPerson);
-
-            if ((savedQuote != null) && (savedQuote.getId() != null)) {
-                return Response.status(Response.Status.CREATED).build();
+            if (quotesService.getQuote(id) == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
             } else {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                final Quotes savedQuote =
+                        quotesService.update(id, quoteText, quotedPerson);
+
+                if ((savedQuote != null) && (savedQuote.getId() != null)) {
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
+            }
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @DELETE
+    @Path("/quote/{id}")
+    @ApiOperation("Delete an existing Quote in Pivotal Embrace.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Quote was deleted."),
+            @ApiResponse(code = 404, message = "The specific quote was not found."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response deleteQuote(
+            @ApiParam(value = "Existing id of quote to delete.", required = true)
+            @PathParam(value = "id") final Long id) {
+        try {
+            final Quotes preExistingQuote = quotesService.getQuote(id);
+
+            if (preExistingQuote == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            } else {
+                if (quotesService.delete(preExistingQuote)) {
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
             }
         } catch (final ServiceException se) {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();

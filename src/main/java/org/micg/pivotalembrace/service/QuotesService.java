@@ -21,4 +21,6 @@ public interface QuotesService {
     Quotes save(final String quote, final String author) throws ServiceException;
 
     Quotes update(final Long id, final String quote, final String author) throws ServiceException;
+
+    boolean delete(final Quotes preExistingQuote) throws ServiceException;
 }

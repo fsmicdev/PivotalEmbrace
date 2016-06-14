@@ -17,4 +17,6 @@ public interface QuotesRepository extends MongoRepository<Quotes, Long> {
 
     Quotes save(final Quotes quotes);
 
+    void delete(final Long id);
+
 }

@@ -87,7 +87,8 @@ public class TaskToDoAPI {
     @ApiOperation("Update an existing To Do item in Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Task ToDo Item was updated."),
+            @ApiResponse(code = 200, message = "Task ToDo Item was updated."),
+            @ApiResponse(code = 404, message = "The specific ToDo Item was not found."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response updateToDo(
@@ -103,13 +104,17 @@ public class TaskToDoAPI {
             @QueryParam("completedFlag") final Boolean completedFlag
     ) {
         try {
-            final TaskToDo savedToDoItem =
-                    taskToDoService.update(id, taskToDoItemText, taskPriority, taskDueDate, completedFlag);
-
-            if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
-                return Response.status(Response.Status.CREATED).build();
+            if (taskToDoService.getTaskToDo(id) == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
             } else {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                final TaskToDo savedToDoItem =
+                        taskToDoService.update(id, taskToDoItemText, taskPriority, taskDueDate, completedFlag);
+
+                if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
             }
         } catch (final ServiceException se) {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
