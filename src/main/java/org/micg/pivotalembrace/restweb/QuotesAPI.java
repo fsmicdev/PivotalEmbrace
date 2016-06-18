@@ -25,10 +25,10 @@ public class QuotesAPI {
     private CacheControl cacheControl;
 
     @GET
-    @ApiOperation("Get all quotes.")
+    @ApiOperation("Get all Quotes.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all quotes."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all Quotes."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getAllQuotes() {
@@ -41,13 +41,13 @@ public class QuotesAPI {
 
     @GET
     @Path("/quote/{id}")
-    @ApiOperation("Get a quote by its unique id.")
+    @ApiOperation("Get a Quote by its unique id.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned quote via unique id."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned Quote via unique id."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
-    public Response getQuote(@ApiParam(value = "Unique id of quote.", required = true)
+    public Response getQuote(@ApiParam(value = "Unique id of Quote.", required = true)
                              @QueryParam("id") final Long id) {
         try {
             return Response.ok(quotesService.getQuote(id)).build();
@@ -58,11 +58,11 @@ public class QuotesAPI {
 
     @GET
     @Path("/person/quotecount")
-    @ApiOperation("Get all authors and authors quote count.  [N.B. This statistical/summary data " +
+    @ApiOperation("Get all authors and authors Quote count.  [N.B. This statistical/summary data " +
                   "will be client-cached for 1 hour].")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching quotes."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching Quotes."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getAllAuthorsAndAuthorQuoteCount() {
@@ -75,13 +75,13 @@ public class QuotesAPI {
 
     @GET
     @Path("/person")
-    @ApiOperation("Get all quotes authored by said quote person.")
+    @ApiOperation("Get all Quotes authored by said Quote person.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching quotes."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching Quotes."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
-    public Response getAllQuotesByPerson(@ApiParam(value = "Author of quote.", required = true)
+    public Response getAllQuotesByPerson(@ApiParam(value = "Author of Quote.", required = true)
                                          @QueryParam("quotePerson") final String quotePerson) {
         try {
             return Response.ok(quotesService.getQuotesByPerson(quotePerson)).build();
@@ -92,10 +92,10 @@ public class QuotesAPI {
 
     @GET
     @Path("/part")
-    @ApiOperation("Get all quotes with a sub-part/fragment/pattern of said quote sub-part (regular expressions supported).")
+    @ApiOperation("Get all Quotes with a sub-part/fragment/pattern of said Quote sub-part (regular expressions supported).")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching quotes."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching Quotes."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getAllQuotesWithQuoteSubpart(@ApiParam(value = "Quote pattern (regular expressions supported).", required = true)
@@ -109,7 +109,7 @@ public class QuotesAPI {
 
     @POST
     @Path("/quote")
-    @ApiOperation("Create and save a new quote into Pivotal Embrace.")
+    @ApiOperation("Create and save a new Quote into Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Quote was created."),
@@ -138,11 +138,11 @@ public class QuotesAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Quote was updated."),
-            @ApiResponse(code = 404, message = "The specific quote was not found."),
+            @ApiResponse(code = 404, message = "The specific Quote was not found."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response updateQuote(
-            @ApiParam(value = "Existing id of quote to update.", required = true)
+            @ApiParam(value = "Existing id of Quote to update.", required = true)
             @PathParam(value = "id") final Long id,
             @ApiParam(value = "Quoted person (i.e. author).", required = true)
             @QueryParam("quotedPerson") final String quotedPerson,
@@ -172,11 +172,11 @@ public class QuotesAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Quote was deleted."),
-            @ApiResponse(code = 404, message = "The specific quote was not found."),
+            @ApiResponse(code = 404, message = "The specific Quote was not found."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response deleteQuote(
-            @ApiParam(value = "Existing id of quote to delete.", required = true)
+            @ApiParam(value = "Existing id of Quote to delete.", required = true)
             @PathParam(value = "id") final Long id) {
         try {
             final Quotes preExistingQuote = quotesService.getQuote(id);
