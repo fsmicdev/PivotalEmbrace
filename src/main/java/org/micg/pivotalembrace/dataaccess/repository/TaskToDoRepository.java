@@ -11,7 +11,5 @@ public interface TaskToDoRepository extends MongoRepository<TaskToDo, Long> {
 
     List<TaskToDo> findAll();
 
-    TaskToDo findOne();
-
     TaskToDo save(final TaskToDo quotes);
 }
