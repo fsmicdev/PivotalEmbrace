@@ -4,8 +4,10 @@ import io.swagger.annotations.*;
 import org.micg.pivotalembrace.model.ErrorRespBody;
 import org.micg.pivotalembrace.model.TaskPriority;
 import org.micg.pivotalembrace.model.TaskToDo;
+import org.micg.pivotalembrace.model.filters.LocalDateParam;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.micg.pivotalembrace.service.TaskToDoService;
+import org.micg.pivotalembrace.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
@@ -13,9 +15,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
 
-@Path("task_todosß")
+@Path("task_todos")
 @Produces(MediaType.APPLICATION_JSON)
-@Api(value = "quotes",
+@Api(value = "task_todos",
         description = "API to create, modify, delete and retrieve Task ToDo Items.")
 public class TaskToDoAPI {
 
@@ -38,6 +40,7 @@ public class TaskToDoAPI {
     }
 
     @GET
+    @Path("/todo/{id}")
     @ApiOperation("Get a task to do by its unique id.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
@@ -67,10 +70,10 @@ public class TaskToDoAPI {
                                 @ApiParam(value = "Task priority.", required = true)
                                 @QueryParam("taskPriority") final TaskPriority taskPriority,
                                 @ApiParam(value = "Task Due Date.", required = true)
-                                @QueryParam("taskDueDate") final Date taskDueDate
+                                @QueryParam("taskDueDate") LocalDateParam taskDueDate
                                ) {
         try {
-            final TaskToDo savedToDoItem = taskToDoService.save(taskToDoItemText, taskPriority, taskDueDate);
+            final TaskToDo savedToDoItem = taskToDoService.save(taskToDoItemText, taskPriority, DateUtils.asDate(taskDueDate.getLocalDate()));
 
             if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
                 return Response.status(Response.Status.CREATED).build();
@@ -99,7 +102,7 @@ public class TaskToDoAPI {
             @ApiParam(value = "Task priority.", required = true)
             @QueryParam("taskPriority") final TaskPriority taskPriority,
             @ApiParam(value = "Task Due Date.", required = true)
-            @QueryParam("taskDueDate") final Date taskDueDate,
+            @QueryParam("taskDueDate") final LocalDateParam taskDueDate,
             @ApiParam(value = "Has the to do item been completed?", required = true)
             @QueryParam("completedFlag") final Boolean completedFlag
     ) {
@@ -108,7 +111,7 @@ public class TaskToDoAPI {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
                 final TaskToDo savedToDoItem =
-                        taskToDoService.update(id, taskToDoItemText, taskPriority, taskDueDate, completedFlag);
+                        taskToDoService.update(id, taskToDoItemText, taskPriority, DateUtils.asDate(taskDueDate.getLocalDate()), completedFlag);
 
                 if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
                     return Response.status(Response.Status.OK).build();

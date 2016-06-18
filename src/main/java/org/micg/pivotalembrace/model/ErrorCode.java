@@ -9,7 +9,7 @@ import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 @ApiModel("errorCode")
 public enum ErrorCode {
 
-    INVALID_PARAMS("Invalid parameters supplied",SC_BAD_REQUEST),
+    INVALID_PARAMS("Invalid parameters supplied", SC_BAD_REQUEST),
     SERVER_ERROR("The server experienced an unexpected application error", SC_INTERNAL_SERVER_ERROR);
 
     private String errorMessage;

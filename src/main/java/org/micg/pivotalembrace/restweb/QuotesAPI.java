@@ -40,6 +40,7 @@ public class QuotesAPI {
     }
 
     @GET
+    @Path("/quote/{id}")
     @ApiOperation("Get a quote by its unique id.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
