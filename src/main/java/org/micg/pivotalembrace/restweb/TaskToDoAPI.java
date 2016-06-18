@@ -1,9 +1,9 @@
 package org.micg.pivotalembrace.restweb;
 
 import io.swagger.annotations.*;
-import org.micg.pivotalembrace.model.ErrorRespBody;
-import org.micg.pivotalembrace.model.TaskPriority;
-import org.micg.pivotalembrace.model.TaskToDo;
+import org.micg.pivotalembrace.model.apirest.ErrorRespBody;
+import org.micg.pivotalembrace.model.auxiliary.PriorityToAttain;
+import org.micg.pivotalembrace.model.document.TaskToDo;
 import org.micg.pivotalembrace.model.filters.LocalDateParam;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.micg.pivotalembrace.service.TaskToDoService;
@@ -64,15 +64,15 @@ public class TaskToDoAPI {
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response saveNewTaskToDo(
-            @ApiParam(value = "Task to item text.", required = true)
+            @ApiParam(value = "Task To Do item text.", required = true)
             @QueryParam("taskToDoItemText") final String taskToDoItemText,
-            @ApiParam(value = "Task priority.", required = true)
-            @QueryParam("taskPriority") final TaskPriority taskPriority,
+            @ApiParam(value = "Task To Do priority.", required = true)
+            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain,
             @ApiParam(value = "Task Due Date.", required = true)
             @QueryParam("taskDueDate") LocalDateParam taskDueDate
            ) {
         try {
-            final TaskToDo savedToDoItem = taskToDoService.save(taskToDoItemText, taskPriority, DateUtils.asDate(taskDueDate.getLocalDate()));
+            final TaskToDo savedToDoItem = taskToDoService.save(taskToDoItemText, priorityToAttain, DateUtils.asDate(taskDueDate.getLocalDate()));
 
             if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
                 return Response.status(Response.Status.CREATED).build();
@@ -94,15 +94,15 @@ public class TaskToDoAPI {
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response updateTaskToDo(
-            @ApiParam(value = "Existing id of to item to update.", required = true)
+            @ApiParam(value = "Existing id of To Do item to update.", required = true)
             @PathParam(value = "id") final Long id,
-            @ApiParam(value = "Task to item text.", required = true)
+            @ApiParam(value = "Task To Do item text.", required = true)
             @QueryParam("taskToDoItemText") final String taskToDoItemText,
-            @ApiParam(value = "Task priority.", required = true)
-            @QueryParam("taskPriority") final TaskPriority taskPriority,
+            @ApiParam(value = "Task To Do priority.", required = true)
+            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain,
             @ApiParam(value = "Task Due Date.", required = true)
             @QueryParam("taskDueDate") final LocalDateParam taskDueDate,
-            @ApiParam(value = "Has the to do item been completed?", required = true)
+            @ApiParam(value = "Has the To Do item been completed?", required = true)
             @QueryParam("completedFlag") final Boolean completedFlag
     ) {
         try {
@@ -110,7 +110,7 @@ public class TaskToDoAPI {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
                 final TaskToDo savedToDoItem =
-                        taskToDoService.update(id, taskToDoItemText, taskPriority, DateUtils.asDate(taskDueDate.getLocalDate()), completedFlag);
+                        taskToDoService.update(id, taskToDoItemText, priorityToAttain, DateUtils.asDate(taskDueDate.getLocalDate()), completedFlag);
 
                 if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
                     return Response.status(Response.Status.OK).build();

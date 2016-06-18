@@ -1,7 +1,7 @@
 package org.micg.pivotalembrace.dataaccess;
 
 import org.micg.pivotalembrace.exception.BaseErrorException;
-import org.micg.pivotalembrace.model.ErrorCode;
+import org.micg.pivotalembrace.model.apirest.ErrorCode;
 
 public class PersistenceException extends BaseErrorException {
 

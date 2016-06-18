@@ -1,5 +1,6 @@
-package org.micg.pivotalembrace.model;
+package org.micg.pivotalembrace.model.document;
 
+import org.micg.pivotalembrace.model.auxiliary.PriorityToAttain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,16 +13,16 @@ public class TaskToDo {
     private Long _id;
 
     private String task;
-    private TaskPriority taskPriority;
+    private PriorityToAttain priorityToAttain;
     private Date toDoByDate;
     private boolean outstandingTask;
 
     public TaskToDo() {
     }
 
-    public TaskToDo(final String task, final TaskPriority taskPriority, final Date toDoByDate, final boolean outstandingTask) {
+    public TaskToDo(final String task, final PriorityToAttain priorityToAttain, final Date toDoByDate, final boolean outstandingTask) {
         this.task = task;
-        this.taskPriority = taskPriority;
+        this.priorityToAttain = priorityToAttain;
         this.toDoByDate = toDoByDate;
         this.outstandingTask = outstandingTask;
     }
@@ -29,8 +30,8 @@ public class TaskToDo {
     @Override
     public String toString() {
         return String.format(
-                "TaskToDos[id=%s, task=%s, taskPriority='%s', toDoByDate='%s', outstandingTask='%s']",
-                _id, task, taskPriority, toDoByDate, outstandingTask);
+                "TaskToDos[id=%s, task=%s, priorityToAttain='%s', toDoByDate='%s', outstandingTask='%s']",
+                _id, task, priorityToAttain, toDoByDate, outstandingTask);
     }
 
     public Long getId() {
@@ -49,12 +50,12 @@ public class TaskToDo {
         this.task = task;
     }
 
-    public TaskPriority getTaskPriority() {
-        return taskPriority;
+    public PriorityToAttain getPriorityToAttain() {
+        return priorityToAttain;
     }
 
-    public void setTaskPriority(final TaskPriority taskPriority) {
-        this.taskPriority = taskPriority;
+    public void setPriorityToAttain(final PriorityToAttain priorityToAttain) {
+        this.priorityToAttain = priorityToAttain;
     }
 
     public Date getToDoByDate() {

@@ -1,6 +1,6 @@
 package org.micg.pivotalembrace.service;
 
-import org.micg.pivotalembrace.model.Quotes;
+import org.micg.pivotalembrace.model.document.Quotes;
 
 import java.util.List;
 import java.util.Map;

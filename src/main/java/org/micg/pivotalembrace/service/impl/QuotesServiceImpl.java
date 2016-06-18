@@ -3,14 +3,13 @@ package org.micg.pivotalembrace.service.impl;
 import org.micg.pivotalembrace.dataaccess.PersistenceException;
 import org.micg.pivotalembrace.dataaccess.sequence.SequenceDao;
 import org.micg.pivotalembrace.dataaccess.template.QuotesTemplate;
-import org.micg.pivotalembrace.model.Quotes;
+import org.micg.pivotalembrace.model.document.Quotes;
 import org.micg.pivotalembrace.dataaccess.repository.QuotesRepository;
 import org.micg.pivotalembrace.service.QuotesService;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.micg.pivotalembrace.model.ErrorCode.INVALID_PARAMS;
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
 @Service("quotesService")
 public class QuotesServiceImpl implements QuotesService {

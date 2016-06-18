@@ -1,4 +1,4 @@
-package org.micg.pivotalembrace.model;
+package org.micg.pivotalembrace.model.apirest;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

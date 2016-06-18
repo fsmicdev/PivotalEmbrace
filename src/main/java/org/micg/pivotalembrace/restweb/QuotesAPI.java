@@ -1,8 +1,8 @@
 package org.micg.pivotalembrace.restweb;
 
 import io.swagger.annotations.*;
-import org.micg.pivotalembrace.model.ErrorRespBody;
-import org.micg.pivotalembrace.model.Quotes;
+import org.micg.pivotalembrace.model.apirest.ErrorRespBody;
+import org.micg.pivotalembrace.model.document.Quotes;
 import org.micg.pivotalembrace.service.QuotesService;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;

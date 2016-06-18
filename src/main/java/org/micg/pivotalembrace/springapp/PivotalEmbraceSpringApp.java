@@ -1,6 +1,6 @@
 package org.micg.pivotalembrace.springapp;
 
-import org.micg.pivotalembrace.model.Quotes;
+import org.micg.pivotalembrace.model.document.Quotes;
 import org.micg.pivotalembrace.service.QuotesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package org.micg.pivotalembrace.dataaccess.template;
 
 import org.micg.pivotalembrace.dataaccess.PersistenceException;
-import org.micg.pivotalembrace.model.Quotes;
+import org.micg.pivotalembrace.model.document.Quotes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

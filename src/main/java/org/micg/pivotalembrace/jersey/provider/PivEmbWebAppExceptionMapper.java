@@ -1,13 +1,13 @@
 package org.micg.pivotalembrace.jersey.provider;
 
-import org.micg.pivotalembrace.model.ErrorRespBody;
+import org.micg.pivotalembrace.model.apirest.ErrorRespBody;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import static org.micg.pivotalembrace.model.ErrorCode.INVALID_PARAMS;
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
 @Provider
 public class PivEmbWebAppExceptionMapper implements ExceptionMapper<WebApplicationException> {

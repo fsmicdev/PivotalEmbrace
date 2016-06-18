@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
-import static org.micg.pivotalembrace.model.ErrorCode.INVALID_PARAMS;
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
 public class LocalDateParam {
 

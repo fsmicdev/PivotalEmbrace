@@ -2,8 +2,8 @@ package org.micg.pivotalembrace.service.impl;
 
 import org.micg.pivotalembrace.dataaccess.repository.TaskToDoRepository;
 import org.micg.pivotalembrace.dataaccess.sequence.SequenceDao;
-import org.micg.pivotalembrace.model.TaskPriority;
-import org.micg.pivotalembrace.model.TaskToDo;
+import org.micg.pivotalembrace.model.auxiliary.PriorityToAttain;
+import org.micg.pivotalembrace.model.document.TaskToDo;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.micg.pivotalembrace.service.TaskToDoService;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class TaskToDoServiceImpl implements TaskToDoService {
     }
 
     @Override
-    public TaskToDo save(final String taskToDoItemText, final TaskPriority taskPriority, final Date taskDueDate) throws ServiceException {
+    public TaskToDo save(final String taskToDoItemText, final PriorityToAttain priorityToAttain, final Date taskDueDate) throws ServiceException {
         final TaskToDo taskToDo = new TaskToDo();
 
         try {
@@ -51,7 +51,7 @@ public class TaskToDoServiceImpl implements TaskToDoService {
 
             taskToDo.setId(nextIdVal);
             taskToDo.setTask(taskToDoItemText);
-            taskToDo.setTaskPriority(taskPriority);
+            taskToDo.setPriorityToAttain(priorityToAttain);
             taskToDo.setToDoByDate(taskDueDate);
             taskToDo.setOutstandingTask(true);
 
@@ -62,12 +62,12 @@ public class TaskToDoServiceImpl implements TaskToDoService {
     }
 
     @Override
-    public TaskToDo update(Long id, String taskToDoItemText, TaskPriority taskPriority, Date taskDueDate, Boolean completedFlag) throws ServiceException {
+    public TaskToDo update(Long id, String taskToDoItemText, PriorityToAttain priorityToAttain, Date taskDueDate, Boolean completedFlag) throws ServiceException {
         final TaskToDo taskToDo = new TaskToDo();
 
         taskToDo.setId(id);
         taskToDo.setTask(taskToDoItemText);
-        taskToDo.setTaskPriority(taskPriority);
+        taskToDo.setPriorityToAttain(priorityToAttain);
         taskToDo.setToDoByDate(taskDueDate);
         taskToDo.setOutstandingTask(true);
 

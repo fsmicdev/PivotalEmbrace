@@ -1,8 +1,8 @@
 package org.micg.pivotalembrace.exception;
 
-import org.micg.pivotalembrace.model.ErrorCode;
+import org.micg.pivotalembrace.model.apirest.ErrorCode;
 
-import static org.micg.pivotalembrace.model.ErrorCode.SERVER_ERROR;
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.SERVER_ERROR;
 
 public class BaseErrorException extends Exception {
 
