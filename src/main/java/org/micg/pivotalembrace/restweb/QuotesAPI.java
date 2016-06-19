@@ -53,7 +53,7 @@ public class QuotesAPI {
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getQuote(@ApiParam(value = "Unique id of Quote.", required = true)
-                             @QueryParam("id") final Long id) {
+                             @PathParam("id") final Long id) {
         try {
             return Response.ok(quotesService.getQuote(id)).build();
         } catch (final ServiceException se) {
@@ -121,9 +121,9 @@ public class QuotesAPI {
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response saveNewQuote(@ApiParam(value = "Quoted person (i.e. author).", required = true)
-                                 @QueryParam("quotedPerson") final String quotedPerson,
+                                 @FormParam("quotedPerson") final String quotedPerson,
                                  @ApiParam(value = "Quote text.", required = true)
-                                 @QueryParam("quoteText") final String quoteText) {
+                                 @FormParam("quoteText") final String quoteText) {
         try {
             final Quotes savedQuote = quotesService.save(quoteText, quotedPerson);
 
@@ -150,9 +150,9 @@ public class QuotesAPI {
             @ApiParam(value = "Existing id of Quote to update.", required = true)
             @PathParam(value = "id") final Long id,
             @ApiParam(value = "Quoted person (i.e. author).", required = true)
-            @QueryParam("quotedPerson") final String quotedPerson,
+            @FormParam("quotedPerson") final String quotedPerson,
             @ApiParam(value = "Quote text.", required = true)
-            @QueryParam("quoteText") final String quoteText) {
+            @FormParam("quoteText") final String quoteText) {
         try {
             if (quotesService.getQuote(id) == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();

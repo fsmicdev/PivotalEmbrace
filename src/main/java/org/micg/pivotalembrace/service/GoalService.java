@@ -18,13 +18,18 @@ public interface GoalService {
 
     List<Goal> getAllGoalsNotFullyAchieved() throws ServiceException;
 
+    List<Goal> getGoalsNotFullyAchievedWithPriorityToAttain(
+         final PriorityToAttain priorityToAttain) throws ServiceException;
+
     Goal getGoal(final Long id) throws ServiceException;
 
-    Goal save(final String goalTitle, final String goalDescription, final PriorityToAttain priorityToAttain,
-              final Date toAchieveByDate, final BigDecimal percentageComplete) throws ServiceException;
+    Goal save(final String goalTitle, final String goalDescription,
+         final PriorityToAttain priorityToAttain, final Date toAchieveByDate,
+         final BigDecimal percentageComplete) throws ServiceException;
 
-    Goal update(final Long id, final String goalTitle, final String goalDescription, final PriorityToAttain priorityToAttain,
-                final Date toAchieveByDate, final BigDecimal percentageComplete) throws ServiceException;
+    Goal update(final Long id, final String goalTitle, final String goalDescription,
+         final PriorityToAttain priorityToAttain, final Date toAchieveByDate,
+         final BigDecimal percentageComplete) throws ServiceException;
 
     boolean delete(final Goal preExistingGoal) throws ServiceException;
 }

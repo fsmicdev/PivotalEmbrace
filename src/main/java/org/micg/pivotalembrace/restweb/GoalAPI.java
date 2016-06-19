@@ -62,6 +62,26 @@ public class GoalAPI {
     }
 
     @GET
+    @Path("/goal/nonattained?priorityToAttain={priorityToAttain}")
+    @ApiOperation("Get all Goals not fully achieved, having specified priority to attain.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all non-attained Goals (i.e. not " +
+                    "100% completed)."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response getGoalsNotFullyAchievedWithPriorityToAttain(
+            @ApiParam(value = "Priority to attain Goal of interest.", required = true)
+            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain
+    ) {
+        try {
+            return Response.ok(goalService.getGoalsNotFullyAchievedWithPriorityToAttain(priorityToAttain)).build();
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @GET
     @Path("/goal/{id}")
     @ApiOperation("Get a Goal by its unique id.")
     @Produces((MediaType.APPLICATION_JSON))
@@ -70,7 +90,7 @@ public class GoalAPI {
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getGoal(@ApiParam(value = "Unique id of Goal.", required = true)
-                            @QueryParam("id") final Long id) {
+                            @PathParam("id") final Long id) {
         try {
             return Response.ok(goalService.getGoal(id)).build();
         } catch (final ServiceException se) {
@@ -88,15 +108,15 @@ public class GoalAPI {
     })
     public Response saveNewGoal(
             @ApiParam(value = "Goal title.", required = true)
-            @QueryParam("goalTitle") final String goalTitle,
+            @FormParam("goalTitle") final String goalTitle,
             @ApiParam(value = "Goal description.", required = true)
-            @QueryParam("goalDescription") final String goalDescription,
+            @FormParam("goalDescription") final String goalDescription,
             @ApiParam(value = "Priority to attain Goal.", required = true)
-            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain,
+            @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
             @ApiParam(value = "Goal achieve by target date.", required = true)
-            @QueryParam("toAchieveByTargetDate") final LocalDateParam toAchieveByTargetDate,
+            @FormParam("toAchieveByTargetDate") final LocalDateParam toAchieveByTargetDate,
             @ApiParam(value = "Goal percentage complete [0-100; defaults to 0]", required = false)
-            @QueryParam("percentageComplete") final BigDecimal percentageComplete) {
+            @FormParam("percentageComplete") final BigDecimal percentageComplete) {
         try {
             final Goal savedGoal = goalService.save(goalTitle, goalDescription, priorityToAttain,
                     DatesUtility.asDate(toAchieveByTargetDate.getLocalDate()), percentageComplete);
@@ -124,15 +144,15 @@ public class GoalAPI {
             @ApiParam(value = "Existing id of Goal to update.", required = true)
             @PathParam(value = "id") final Long id,
             @ApiParam(value = "Goal title.", required = true)
-            @QueryParam("goalTitle") final String goalTitle,
+            @FormParam("goalTitle") final String goalTitle,
             @ApiParam(value = "Goal description.", required = true)
-            @QueryParam("goalDescription") final String goalDescription,
+            @FormParam("goalDescription") final String goalDescription,
             @ApiParam(value = "Priority to attain Goal.", required = true)
-            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain,
+            @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
             @ApiParam(value = "Goal achieve by target date.", required = true)
-            @QueryParam("toAchieveTargetDate") final LocalDateParam toAchieveTargetDate,
+            @FormParam("toAchieveTargetDate") final LocalDateParam toAchieveTargetDate,
             @ApiParam(value = "Goal percentage complete [0-100]", required = true)
-            @QueryParam("percentageComplete") final BigDecimal percentageComplete) {
+            @FormParam("percentageComplete") final BigDecimal percentageComplete) {
         try {
             if (goalService.getGoal(id) == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();

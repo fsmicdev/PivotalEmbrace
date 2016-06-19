@@ -53,7 +53,7 @@ public class TaskToDoAPI {
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getTaskToDo(@ApiParam(value = "Unique id of task to do.", required = true)
-                                @QueryParam("id") final Long id) {
+                                @PathParam("id") final Long id) {
         try {
             return Response.ok(taskToDoService.getTaskToDo(id)).build();
         } catch (final ServiceException se) {
@@ -71,11 +71,11 @@ public class TaskToDoAPI {
     })
     public Response saveNewTaskToDo(
             @ApiParam(value = "Task To Do item text.", required = true)
-            @QueryParam("taskToDoItemText") final String taskToDoItemText,
+            @FormParam("taskToDoItemText") final String taskToDoItemText,
             @ApiParam(value = "Task To Do priority.", required = true)
-            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain,
+            @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
             @ApiParam(value = "Task Due Date.", required = true) // 2016-06-28 10:00:00.000
-            @QueryParam("taskDueDate") LocalDateParam taskDueDate
+            @FormParam("taskDueDate") LocalDateParam taskDueDate
            ) {
         try {
             final TaskToDo savedToDoItem = taskToDoService.save(taskToDoItemText, priorityToAttain,
@@ -104,13 +104,13 @@ public class TaskToDoAPI {
             @ApiParam(value = "Existing id of To Do item to update.", required = true)
             @PathParam(value = "id") final Long id,
             @ApiParam(value = "Task To Do item text.", required = true)
-            @QueryParam("taskToDoItemText") final String taskToDoItemText,
+            @FormParam("taskToDoItemText") final String taskToDoItemText,
             @ApiParam(value = "Task To Do priority.", required = true)
-            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain,
+            @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
             @ApiParam(value = "Task Due Date.", required = true)
-            @QueryParam("taskDueDate") final LocalDateParam taskDueDate,
+            @FormParam("taskDueDate") final LocalDateParam taskDueDate,
             @ApiParam(value = "Has the To Do item been completed?", required = true)
-            @QueryParam("completedFlag") final Boolean completedFlag
+            @FormParam("completedFlag") final Boolean completedFlag
     ) {
         try {
             if (taskToDoService.getTaskToDo(id) == null) {

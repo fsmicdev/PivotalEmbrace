@@ -57,6 +57,16 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
+    public List<Goal> getGoalsNotFullyAchievedWithPriorityToAttain(
+            final PriorityToAttain priorityToAttain) throws ServiceException {
+        try {
+            return goalTemplate.getGoalsNotFullyAchievedWithPriorityToAttain(priorityToAttain);
+        } catch (final PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    @Override
     public Goal getGoal(final Long id) throws ServiceException {
         return goalRepository.findOne(id);
     }
