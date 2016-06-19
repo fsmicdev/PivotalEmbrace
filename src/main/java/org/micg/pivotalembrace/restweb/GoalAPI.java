@@ -46,36 +46,21 @@ public class GoalAPI {
 
     @GET
     @Path("/goal/nonattained")
-    @ApiOperation("Get all Goals not fully achieved.")
+    @ApiOperation("Get all Goals not fully achieved, with the option of specifying a filtering Priority to Attain.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all non-attained Goals (i.e. not " +
-                                               "100% completed)."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all matching non-attained Goals (i.e. not " +
+                                               "100% completed, and matching Priority to Attain - if supplied)."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
-    public Response getAllGoalsNotFullyAchieved() {
+    public Response getGoalsNotFullyAchieved(@ApiParam(value = "Priority to attain Goal of interest.", required = false)
+                                             @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain) {
         try {
-            return Response.ok(goalService.getAllGoalsNotFullyAchieved()).build();
-        } catch (final ServiceException se) {
-            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
-        }
-    }
-
-    @GET
-    @Path("/goal/nonattained?priorityToAttain={priorityToAttain}")
-    @ApiOperation("Get all Goals not fully achieved, having specified priority to attain.")
-    @Produces((MediaType.APPLICATION_JSON))
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all non-attained Goals (i.e. not " +
-                    "100% completed)."),
-            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
-    })
-    public Response getGoalsNotFullyAchievedWithPriorityToAttain(
-            @ApiParam(value = "Priority to attain Goal of interest.", required = true)
-            @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain
-    ) {
-        try {
-            return Response.ok(goalService.getGoalsNotFullyAchievedWithPriorityToAttain(priorityToAttain)).build();
+            if (priorityToAttain != null) {
+                return Response.ok(goalService.getGoalsNotFullyAchievedWithPriorityToAttain(priorityToAttain)).build();
+            } else {
+                return Response.ok(goalService.getAllGoalsNotFullyAchieved()).build();
+            }
         } catch (final ServiceException se) {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
         }
