@@ -14,6 +14,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Repository
 public class QuotesTemplate {
 

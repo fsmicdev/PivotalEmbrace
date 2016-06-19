@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Repository("quotesRepository")
 public interface QuotesRepository extends MongoRepository<Quotes, Long> {
 

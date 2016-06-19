@@ -5,6 +5,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.ws.rs.ApplicationPath;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @ApplicationPath("/rest")
 public class JerseyWebApp extends ResourceConfig {
 

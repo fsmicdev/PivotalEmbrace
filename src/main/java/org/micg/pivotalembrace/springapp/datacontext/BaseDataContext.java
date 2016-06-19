@@ -4,6 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public abstract class BaseDataContext extends AbstractMongoConfiguration {
 
     @Bean

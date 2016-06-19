@@ -15,6 +15,11 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.micg.pivotalembrace"})
 @EnableMongoRepositories(basePackages = {"org.micg.pivotalembrace.dataaccess.repository"})

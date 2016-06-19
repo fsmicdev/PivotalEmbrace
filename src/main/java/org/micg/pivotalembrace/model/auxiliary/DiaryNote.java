@@ -3,6 +3,11 @@ package org.micg.pivotalembrace.model.auxiliary;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public class DiaryNote {
 
     private LocalDate diaryDate;

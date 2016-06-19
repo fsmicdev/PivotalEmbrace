@@ -6,10 +6,17 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Repository("taskToDoRepository")
 public interface TaskToDoRepository extends MongoRepository<TaskToDo, Long> {
 
     List<TaskToDo> findAll();
 
     TaskToDo save(final TaskToDo quotes);
+
+    void delete(final Long id);
 }

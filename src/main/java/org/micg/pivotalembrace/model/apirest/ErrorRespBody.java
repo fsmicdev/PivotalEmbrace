@@ -2,6 +2,11 @@ package org.micg.pivotalembrace.model.apirest;
 
 import io.swagger.annotations.ApiModel;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @ApiModel
 public class ErrorRespBody {
 

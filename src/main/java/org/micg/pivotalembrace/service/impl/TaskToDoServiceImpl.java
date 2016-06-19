@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Service("taskToDoService")
 public class TaskToDoServiceImpl implements TaskToDoService {
 
@@ -62,17 +67,34 @@ public class TaskToDoServiceImpl implements TaskToDoService {
     }
 
     @Override
-    public TaskToDo update(Long id, String taskToDoItemText, PriorityToAttain priorityToAttain, Date taskDueDate, Boolean completedFlag) throws ServiceException {
+    public TaskToDo update(final Long id, final String taskToDoItemText, final PriorityToAttain priorityToAttain,
+                           final Date taskDueDate, final boolean completedFlag) throws ServiceException {
         final TaskToDo taskToDo = new TaskToDo();
 
         taskToDo.setId(id);
         taskToDo.setTask(taskToDoItemText);
         taskToDo.setPriorityToAttain(priorityToAttain);
         taskToDo.setToDoByDate(taskDueDate);
+        taskToDo.setOutstandingTask( !completedFlag );
         taskToDo.setOutstandingTask(true);
 
         try {
             return taskToDoRepository.save(taskToDo);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean delete(final TaskToDo preExistingTaskToDo) throws ServiceException {
+        try {
+            if (preExistingTaskToDo == null) {
+                return false;
+            } else {
+                taskToDoRepository.delete(preExistingTaskToDo);
+
+                return true;
+            }
         } catch (final Exception e) {
             throw new ServiceException(e);
         }

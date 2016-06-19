@@ -1,5 +1,10 @@
 package org.micg.pivotalembrace.util;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public final class IntegrationTestConstants {
 
     public static final String BASE_URL = "http://localhost";

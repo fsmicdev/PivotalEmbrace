@@ -6,10 +6,17 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Repository("goalsRepository")
 public interface GoalRepository extends MongoRepository<Goal, Long> {
 
     List<Goal> findAll();
 
     Goal save(final Goal quotes);
+
+    void delete(final Long id);
 }

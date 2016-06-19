@@ -12,6 +12,11 @@ import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Path("quotes")
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "quotes",

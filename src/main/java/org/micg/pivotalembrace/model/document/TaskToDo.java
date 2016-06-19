@@ -6,6 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Document(collection = "task_to_do")
 public class TaskToDo {
 

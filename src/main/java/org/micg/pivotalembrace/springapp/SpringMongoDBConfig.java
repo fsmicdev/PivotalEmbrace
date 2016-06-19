@@ -8,6 +8,11 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Configuration
 public class SpringMongoDBConfig extends AbstractMongoConfiguration {
 

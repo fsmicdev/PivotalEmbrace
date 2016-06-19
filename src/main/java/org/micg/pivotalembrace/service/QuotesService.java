@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public interface QuotesService {
 
     List<Quotes> getAllQuotes() throws ServiceException;

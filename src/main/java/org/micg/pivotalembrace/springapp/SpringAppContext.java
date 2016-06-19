@@ -6,6 +6,11 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.ws.rs.core.CacheControl;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Configuration
 @ComponentScan(basePackages = {"org.micg.pivotalembrace"})
 public class SpringAppContext {

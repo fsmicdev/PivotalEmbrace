@@ -1,7 +1,10 @@
 package org.micg.pivotalembrace.dataaccess.sequence;
 
-import org.micg.pivotalembrace.exception.SequenceException;
-
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public interface SequenceDao {
 
     Long getNextSequenceId(String key) throws SequenceException;

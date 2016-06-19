@@ -1,5 +1,10 @@
-package org.micg.pivotalembrace.exception;
+package org.micg.pivotalembrace.dataaccess.sequence;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public class SequenceException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

@@ -15,6 +15,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Path("goals")
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "goals",
@@ -58,7 +63,7 @@ public class GoalAPI {
 
     @POST
     @Path("/goal")
-    @ApiOperation("Create and save a new Goal item into Pivotal Embrace.")
+    @ApiOperation("Create and save a new Goal into Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Goal item was created."),
@@ -91,7 +96,7 @@ public class GoalAPI {
 
     @PUT
     @Path("/goal/{id}")
-    @ApiOperation("Update an existing Goal item in Pivotal Embrace.")
+    @ApiOperation("Update an existing Goal in Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Goal item was updated."),
@@ -120,6 +125,35 @@ public class GoalAPI {
                                 DateUtils.asDate(toAchieveTargetDate.getLocalDate()), percentageComplete);
 
                 if ((savedGoal != null) && (savedGoal.getId() != null)) {
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
+            }
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @DELETE
+    @Path("/goal/{id}")
+    @ApiOperation("Delete an existing Goal in Pivotal Embrace.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Goal was deleted."),
+            @ApiResponse(code = 404, message = "The specific Goal was not found."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response deleteGoal(
+            @ApiParam(value = "Existing id of Goal to delete.", required = true)
+            @PathParam(value = "id") final Long id) {
+        try {
+            final Goal preExistingGoal = goalService.getGoal(id);
+
+            if (preExistingGoal == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            } else {
+                if (goalService.delete(preExistingGoal)) {
                     return Response.status(Response.Status.OK).build();
                 } else {
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Profile("integration-test")
 public class IntegrationTestDataContext extends BaseDataContext {
 

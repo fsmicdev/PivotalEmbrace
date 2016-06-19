@@ -4,6 +4,11 @@ import org.micg.pivotalembrace.model.apirest.ErrorCode;
 
 import static org.micg.pivotalembrace.model.apirest.ErrorCode.SERVER_ERROR;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public class BaseErrorException extends Exception {
 
     private ErrorCode errorCode;

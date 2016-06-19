@@ -3,6 +3,11 @@ package org.micg.pivotalembrace.dataaccess;
 import org.micg.pivotalembrace.exception.BaseErrorException;
 import org.micg.pivotalembrace.model.apirest.ErrorCode;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public class PersistenceException extends BaseErrorException {
 
     public PersistenceException(final ErrorCode errorCode) {

@@ -14,6 +14,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Path("task_todos")
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "task_todos",
@@ -68,7 +73,7 @@ public class TaskToDoAPI {
             @QueryParam("taskToDoItemText") final String taskToDoItemText,
             @ApiParam(value = "Task To Do priority.", required = true)
             @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain,
-            @ApiParam(value = "Task Due Date.", required = true)
+            @ApiParam(value = "Task Due Date.", required = true) // 2016-06-28 10:00:00.000
             @QueryParam("taskDueDate") LocalDateParam taskDueDate
            ) {
         try {
@@ -113,6 +118,35 @@ public class TaskToDoAPI {
                         taskToDoService.update(id, taskToDoItemText, priorityToAttain, DateUtils.asDate(taskDueDate.getLocalDate()), completedFlag);
 
                 if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
+                    return Response.status(Response.Status.OK).build();
+                } else {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
+            }
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @DELETE
+    @Path("/todo/{id}")
+    @ApiOperation("Delete an existing Task To Do in Pivotal Embrace.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Task To Do was deleted."),
+            @ApiResponse(code = 404, message = "The specific Task To Do was not found."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response deleteQuote(
+            @ApiParam(value = "Existing id of Task To Do to delete.", required = true)
+            @PathParam(value = "id") final Long id) {
+        try {
+            final TaskToDo preExistingTaskToDo = taskToDoService.getTaskToDo(id);
+
+            if (preExistingTaskToDo == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            } else {
+                if (taskToDoService.delete(preExistingTaskToDo)) {
                     return Response.status(Response.Status.OK).build();
                 } else {
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

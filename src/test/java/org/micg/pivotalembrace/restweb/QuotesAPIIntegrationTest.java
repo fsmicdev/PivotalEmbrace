@@ -13,6 +13,11 @@ import static org.micg.pivotalembrace.util.IntegrationTestConstants.BASE_URL;
 import static org.micg.pivotalembrace.util.IntegrationTestConstants.SERVER_PORT;
 import static org.micg.pivotalembrace.util.IntegrationTestConstants.APP_BASE_PATH;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {SpringAppContext.class})
 @ActiveProfiles("integration-test")

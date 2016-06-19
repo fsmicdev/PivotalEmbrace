@@ -15,6 +15,11 @@ import java.time.LocalDate;
 
 import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 public class LocalDateParam {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalDateParam.class);

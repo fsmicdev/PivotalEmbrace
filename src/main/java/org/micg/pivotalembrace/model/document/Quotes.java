@@ -3,6 +3,11 @@ package org.micg.pivotalembrace.model.document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Document(collection = "quotes")
 public class Quotes {
 

@@ -6,6 +6,11 @@ import io.swagger.annotations.ApiModelProperty;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @ApiModel("errorCode")
 public enum ErrorCode {
 

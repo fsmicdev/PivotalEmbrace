@@ -19,6 +19,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Service("quotesService")
 public class QuotesServiceImpl implements QuotesService {
 

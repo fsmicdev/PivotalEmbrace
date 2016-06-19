@@ -9,6 +9,11 @@ import javax.ws.rs.ext.Provider;
 
 import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Provider
 public class PivEmbWebAppExceptionMapper implements ExceptionMapper<WebApplicationException> {
 

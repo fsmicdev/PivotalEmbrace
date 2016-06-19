@@ -7,6 +7,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
+/**
+ *
+ *
+ * @author fsmicdev
+ */
 @Provider
 public class PivEmbContainerRespFilter implements ContainerResponseFilter {
 
