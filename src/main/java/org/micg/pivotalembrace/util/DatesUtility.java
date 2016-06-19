@@ -1,4 +1,4 @@
-package org.micg.pivotalembrace.utils;
+package org.micg.pivotalembrace.util;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author fsmicdev
  */
-public class DateUtils {
+public class DatesUtility {
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());

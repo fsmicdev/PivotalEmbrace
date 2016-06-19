@@ -7,7 +7,8 @@ import org.micg.pivotalembrace.model.document.TaskToDo;
 import org.micg.pivotalembrace.model.filters.LocalDateParam;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.micg.pivotalembrace.service.TaskToDoService;
-import org.micg.pivotalembrace.utils.DateUtils;
+
+import org.micg.pivotalembrace.util.DatesUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
@@ -77,7 +78,8 @@ public class TaskToDoAPI {
             @QueryParam("taskDueDate") LocalDateParam taskDueDate
            ) {
         try {
-            final TaskToDo savedToDoItem = taskToDoService.save(taskToDoItemText, priorityToAttain, DateUtils.asDate(taskDueDate.getLocalDate()));
+            final TaskToDo savedToDoItem = taskToDoService.save(taskToDoItemText, priorityToAttain,
+                    DatesUtility.asDate(taskDueDate.getLocalDate()));
 
             if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
                 return Response.status(Response.Status.CREATED).build();
@@ -115,7 +117,8 @@ public class TaskToDoAPI {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
                 final TaskToDo savedToDoItem =
-                        taskToDoService.update(id, taskToDoItemText, priorityToAttain, DateUtils.asDate(taskDueDate.getLocalDate()), completedFlag);
+                        taskToDoService.update(id, taskToDoItemText, priorityToAttain,
+                                DatesUtility.asDate(taskDueDate.getLocalDate()), completedFlag);
 
                 if ((savedToDoItem != null) && (savedToDoItem.getId() != null)) {
                     return Response.status(Response.Status.OK).build();

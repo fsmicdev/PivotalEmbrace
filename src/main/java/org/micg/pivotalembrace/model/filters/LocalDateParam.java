@@ -2,7 +2,8 @@ package org.micg.pivotalembrace.model.filters;
 
 import org.apache.commons.lang3.StringUtils;
 
-import org.micg.pivotalembrace.utils.DateUtils;
+
+import org.micg.pivotalembrace.util.DatesUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class LocalDateParam {
                 throw new ParseException("{dateStr} parameter must not be null", -1);
             }
 
-            this.localDate = DateUtils.asLocalDate(DATE_FORMAT.parse(dateStr));
+            this.localDate = DatesUtility.asLocalDate(DATE_FORMAT.parse(dateStr));
         } catch (final ParseException pe) {
             logger.error("WebApplicationException {}: " +
                          "Could not parse date string [" + dateStr + "]: " + pe.getMessage(), pe);

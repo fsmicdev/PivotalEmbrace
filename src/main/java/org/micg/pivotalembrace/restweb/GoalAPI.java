@@ -7,7 +7,7 @@ import org.micg.pivotalembrace.model.document.Goal;
 import org.micg.pivotalembrace.model.filters.LocalDateParam;
 import org.micg.pivotalembrace.service.GoalService;
 import org.micg.pivotalembrace.service.ServiceException;
-import org.micg.pivotalembrace.utils.DateUtils;
+import org.micg.pivotalembrace.util.DatesUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
@@ -38,7 +38,22 @@ public class GoalAPI {
     })
     public Response getAllGoals() {
         try {
-            return Response.ok(goalService.getAllGoals(true)).build();
+            return Response.ok(goalService.getAllGoals()).build();
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @GET
+    @ApiOperation("Get all Goals not fully achieved.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all Goals."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response getAllGoalsNotFullyAchieved() {
+        try {
+            return Response.ok(goalService.getAllGoalsNotFullyAchieved()).build();
         } catch (final ServiceException se) {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
         }
@@ -82,7 +97,7 @@ public class GoalAPI {
             @QueryParam("percentageComplete") final BigDecimal percentageComplete) {
         try {
             final Goal savedGoal = goalService.save(goalTitle, goalDescription, priorityToAttain,
-                    DateUtils.asDate(toAchieveByTargetDate.getLocalDate()), percentageComplete);
+                    DatesUtility.asDate(toAchieveByTargetDate.getLocalDate()), percentageComplete);
 
             if ((savedGoal != null) && (savedGoal.getId() != null)) {
                 return Response.status(Response.Status.CREATED).build();
@@ -122,7 +137,7 @@ public class GoalAPI {
             } else {
                 final Goal savedGoal =
                         goalService.update(id, goalTitle, goalDescription, priorityToAttain,
-                                DateUtils.asDate(toAchieveTargetDate.getLocalDate()), percentageComplete);
+                                DatesUtility.asDate(toAchieveTargetDate.getLocalDate()), percentageComplete);
 
                 if ((savedGoal != null) && (savedGoal.getId() != null)) {
                     return Response.status(Response.Status.OK).build();

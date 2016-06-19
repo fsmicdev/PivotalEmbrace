@@ -14,7 +14,9 @@ import java.util.List;
  */
 public interface GoalService {
 
-    List<Goal> getAllGoals(final boolean totallyCompletedGoalsOnly) throws ServiceException;
+    List<Goal> getAllGoals() throws ServiceException;
+
+    List<Goal> getAllGoalsNotFullyAchieved() throws ServiceException;
 
     Goal getGoal(final Long id) throws ServiceException;
 
