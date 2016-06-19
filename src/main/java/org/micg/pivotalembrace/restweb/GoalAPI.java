@@ -45,10 +45,12 @@ public class GoalAPI {
     }
 
     @GET
+    @Path("/goal/nonattained")
     @ApiOperation("Get all Goals not fully achieved.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all Goals."),
+            @ApiResponse(code = 200, message = "Lookup succeeded. Returned all non-attained Goals (i.e. not " +
+                                               "100% completed)."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getAllGoalsNotFullyAchieved() {

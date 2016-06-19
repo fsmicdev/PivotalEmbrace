@@ -18,7 +18,7 @@ public class JerseyWebApp extends ResourceConfig {
         swaggerBeanConfig.setResourcePackage("org.micg.pivotalembrace.restweb");
         swaggerBeanConfig.setBasePath("/pivotalembrace/rest");
         swaggerBeanConfig.setTitle("Pivotal Embrace REST API");
-        swaggerBeanConfig.setDescription("REST API for the Pivotal Embrace WebApp");
+        swaggerBeanConfig.setDescription("REST API for the Pivotal Embrace WebApp/Platform.");
         swaggerBeanConfig.setScan(true);
 
         packages("org.micg.pivotalembrace.restweb",
