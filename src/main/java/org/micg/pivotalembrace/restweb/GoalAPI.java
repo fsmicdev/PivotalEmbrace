@@ -53,7 +53,7 @@ public class GoalAPI {
                                                "100% completed, and matching Priority to Attain - if supplied)."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
-    public Response getGoalsNotFullyAchieved(@ApiParam(value = "Priority to attain Goal of interest.", required = false)
+    public Response getGoalsNotFullyAchieved(@ApiParam(value = "Optional Goal Priority to Attain.", required = false)
                                              @QueryParam("priorityToAttain") final PriorityToAttain priorityToAttain) {
         try {
             if (priorityToAttain != null) {
