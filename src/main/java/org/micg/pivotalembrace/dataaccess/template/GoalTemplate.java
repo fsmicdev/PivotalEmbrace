@@ -24,7 +24,7 @@ public class GoalTemplate {
 
     public List<Goal> getAllGoalsNotFullyAchieved() throws PersistenceException {
         final Query query = new Query();
-        query.addCriteria(Criteria.where("goal").lt(new BigDecimal(100)));
+        query.addCriteria(Criteria.where("percentageAchieved").lt(new BigDecimal(100)));
 
         return mongoTemplate.find(query, Goal.class);
     }
