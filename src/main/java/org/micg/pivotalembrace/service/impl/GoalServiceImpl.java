@@ -106,6 +106,11 @@ public class GoalServiceImpl implements GoalService {
         goal.setToAchieveByTargetDate(toAchieveByDate);
         goal.setPercentageAchieved(percentageComplete);
 
+        return this.update(goal);
+    }
+
+    @Override
+    public Goal update(final Goal goal) throws ServiceException {
         try {
             return goalRepository.save(goal);
         } catch (final Exception e) {

@@ -13,6 +13,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
@@ -51,6 +53,10 @@ public class LocalDateParam {
 
     public LocalDate getLocalDate() {
         return localDate;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return DatesUtility.asLocalDateTime(DatesUtility.asUitlDateFromLocalDate(localDate));
     }
 
 }

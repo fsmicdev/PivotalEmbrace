@@ -15,6 +15,9 @@ public class DiaryNote {
     private String diaryNoteText;
     private boolean keepPrivate;
 
+    public DiaryNote() {
+    }
+
     public DiaryNote(final LocalDate diaryDate, final LocalTime diaryTime,
                      final String diaryNoteText, final boolean keepPrivate) {
         this.diaryDate = diaryDate;

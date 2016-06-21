@@ -13,19 +13,23 @@ import java.util.Date;
  */
 public class DatesUtility {
 
-    public static Date asDate(LocalDate localDate) {
+    public static Date asDate(final LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public static Date asDate(LocalDateTime localDateTime) {
+    public static Date asDate(final LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public static LocalDate asLocalDate(Date date) {
+    public static LocalDate asLocalDate(final Date date) {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    public static LocalDateTime asLocalDateTime(Date date) {
+    public static LocalDateTime asLocalDateTime(final Date date) {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static java.util.Date asUitlDateFromLocalDate(final java.time.LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

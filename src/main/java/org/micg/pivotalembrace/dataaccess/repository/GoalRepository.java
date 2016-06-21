@@ -16,7 +16,7 @@ public interface GoalRepository extends MongoRepository<Goal, Long> {
 
     List<Goal> findAll();
 
-    Goal save(final Goal quotes);
+    Goal save(final Goal goal);
 
     void delete(final Long id);
 }

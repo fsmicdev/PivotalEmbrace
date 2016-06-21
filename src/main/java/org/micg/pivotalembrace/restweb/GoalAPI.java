@@ -2,6 +2,7 @@ package org.micg.pivotalembrace.restweb;
 
 import io.swagger.annotations.*;
 import org.micg.pivotalembrace.model.apirest.ErrorRespBody;
+import org.micg.pivotalembrace.model.auxiliary.DiaryNote;
 import org.micg.pivotalembrace.model.auxiliary.PriorityToAttain;
 import org.micg.pivotalembrace.model.document.Goal;
 import org.micg.pivotalembrace.model.filters.LocalDateParam;
@@ -107,6 +108,46 @@ public class GoalAPI {
                     DatesUtility.asDate(toAchieveByTargetDate.getLocalDate()), percentageComplete);
 
             if ((savedGoal != null) && (savedGoal.getId() != null)) {
+                return Response.status(Response.Status.CREATED).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (final ServiceException se) {
+            return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
+        }
+    }
+
+    @POST
+    @Path("/goal/{id}/note")
+    @ApiOperation("Add a Diary Note to an existing Goal in Pivotal Embrace.")
+    @Produces((MediaType.APPLICATION_JSON))
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "New Diary Note was created for the target Goal."),
+            @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
+    })
+    public Response saveNewGoalDiaryNote(
+            @ApiParam(value = "Existing id of Goal to add the diary note to.", required = true)
+            @PathParam(value = "id") final Long id,
+            @ApiParam(value = "New Diary Note text for Goal.", required = true)
+            @FormParam("diaryNote") final String diaryNoteText,
+            @ApiParam(value = "Date of Diary Note.", required = true)
+            @FormParam("diaryNoteDate") final LocalDateParam diaryNoteDate,
+            @ApiParam(value = "Keep Diary Note private?", required = true)
+            @FormParam("privateDiaryNoteFlag") final boolean privateDiaryNoteFlag) {
+        try {
+            final Goal existingGoal = goalService.getGoal(id);
+
+            final DiaryNote diaryNote = new DiaryNote();
+            diaryNote.setDiaryNoteText(diaryNoteText);
+            diaryNote.setDiaryDate(diaryNoteDate.getLocalDate());
+            diaryNote.setDiaryTime(diaryNoteDate.getLocalDateTime().toLocalTime());
+            diaryNote.setKeepPrivate(privateDiaryNoteFlag);
+
+            existingGoal.getDiaryNotes().add(diaryNote);
+
+            final Goal updatedGoal = goalService.update(existingGoal);
+
+            if ((updatedGoal != null) && (updatedGoal.getId() != null)) {
                 return Response.status(Response.Status.CREATED).build();
             } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

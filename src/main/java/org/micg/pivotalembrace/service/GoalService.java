@@ -31,5 +31,7 @@ public interface GoalService {
          final PriorityToAttain priorityToAttain, final Date toAchieveByDate,
          final BigDecimal percentageComplete) throws ServiceException;
 
+    Goal update(final Goal goal) throws ServiceException;
+
     boolean delete(final Goal preExistingGoal) throws ServiceException;
 }
