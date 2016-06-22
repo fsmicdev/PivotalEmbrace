@@ -9,7 +9,9 @@ import org.micg.pivotalembrace.model.filters.LocalDateParam;
 import org.micg.pivotalembrace.service.GoalService;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.micg.pivotalembrace.util.DatesUtility;
+import org.micg.pivotalembrace.validators.GeoCoordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -123,6 +125,7 @@ public class GoalAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Diary Note was created for the target Goal."),
+            @ApiResponse(code = 400, message = "Invalid parameters, causing bad request."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response saveNewGoalDiaryNote(
@@ -133,7 +136,11 @@ public class GoalAPI {
             @ApiParam(value = "Date of Diary Note.", required = true)
             @FormParam("diaryNoteDate") final LocalDateParam diaryNoteDate,
             @ApiParam(value = "Keep Diary Note private?", required = true)
-            @FormParam("privateDiaryNoteFlag") final boolean privateDiaryNoteFlag) {
+            @FormParam("privateDiaryNoteFlag") final boolean privateDiaryNoteFlag,
+            @ApiParam(value = "Latitude location where Diary Note was made.", required = false)
+            @FormParam("diaryNoteLatitudeLocation") final Double diaryNoteLatitudeLocation,
+            @ApiParam(value = "Longitude location where Diary Note was made.", required = false)
+            @FormParam("diaryNoteLongitudeLocation") final Double diaryNoteLongitudeLocation) {
         try {
             final Goal existingGoal = goalService.getGoal(id);
 
@@ -142,6 +149,14 @@ public class GoalAPI {
             diaryNote.setDiaryDate(diaryNoteDate.getLocalDate());
             diaryNote.setDiaryTime(diaryNoteDate.getLocalDateTime().toLocalTime());
             diaryNote.setKeepPrivate(privateDiaryNoteFlag);
+
+            if ((diaryNoteLatitudeLocation != null) && (diaryNoteLongitudeLocation != null) &&
+                (GeoCoordValidator.isValidGeoCoordPair(diaryNoteLatitudeLocation, diaryNoteLongitudeLocation))) {
+                diaryNote.setLocationGeoJsonPoint(
+                        new GeoJsonPoint(diaryNoteLatitudeLocation, diaryNoteLongitudeLocation));
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
 
             existingGoal.getDiaryNotes().add(diaryNote);
 
