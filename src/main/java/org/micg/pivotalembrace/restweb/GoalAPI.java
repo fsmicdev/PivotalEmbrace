@@ -125,7 +125,7 @@ public class GoalAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Diary Note was created for the target Goal."),
-            @ApiResponse(code = 400, message = "Invalid parameters, causing bad request."),
+            @ApiResponse(code = 400, message = "A bad request due to Invalid Parameters."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response saveNewGoalDiaryNote(
@@ -150,12 +150,13 @@ public class GoalAPI {
             diaryNote.setDiaryTime(diaryNoteDate.getLocalDateTime().toLocalTime());
             diaryNote.setKeepPrivate(privateDiaryNoteFlag);
 
-            if ((diaryNoteLatitudeLocation != null) && (diaryNoteLongitudeLocation != null) &&
-                (GeoCoordValidator.isValidGeoCoordPair(diaryNoteLatitudeLocation, diaryNoteLongitudeLocation))) {
-                diaryNote.setLocationGeoJsonPoint(
-                        new GeoJsonPoint(diaryNoteLatitudeLocation, diaryNoteLongitudeLocation));
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST).build();
+            // Validate OPTIONAL geo-coordinate location
+            if ((diaryNoteLatitudeLocation != null) && (diaryNoteLongitudeLocation != null)) {
+                if (GeoCoordValidator.isValidGeoCoordPair(diaryNoteLatitudeLocation, diaryNoteLongitudeLocation)) {
+                    diaryNote.setLocationGeoJsonPoint(new GeoJsonPoint(diaryNoteLatitudeLocation, diaryNoteLongitudeLocation));
+                } else {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
             }
 
             existingGoal.getDiaryNotes().add(diaryNote);
