@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- *
+ * Service interface for [Quote]s in Pivotal Embrace.
  *
  * @author fsmicdev
  */

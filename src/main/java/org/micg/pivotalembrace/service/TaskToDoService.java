@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * Service interface for [TaskToDo]s in Pivotal Embrace.
  *
  * @author fsmicdev
  */
