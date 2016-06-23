@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 /**
- *
+ * Model abstraction for [TaskToDo]s in Pivotal Embrace.
  *
  * @author fsmicdev
  */

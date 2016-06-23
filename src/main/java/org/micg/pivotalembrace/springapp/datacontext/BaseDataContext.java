@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 /**
- *
+ * Base class for Spring-based configuration of environment specific data contexts.
  *
  * @author fsmicdev
  */

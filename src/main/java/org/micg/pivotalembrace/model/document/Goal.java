@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * Model abstraction for [Goal]s in Pivotal Embrace.
  *
  * @author fsmicdev
  */

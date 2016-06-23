@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.ws.rs.core.CacheControl;
 
 /**
- *
+ * Generic configuration class, via Spring, for the Pivotal Embrace web-app back-end.
  *
  * @author fsmicdev
  */

@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 /**
- *
+ * Configuration, via Spring annotations, for the document-based MongoDB data resource.
  *
  * @author fsmicdev
  */

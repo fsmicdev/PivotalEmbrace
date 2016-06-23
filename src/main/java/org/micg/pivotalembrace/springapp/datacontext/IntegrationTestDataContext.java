@@ -9,7 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 /**
- *
+ * Spring-based configured data context for integration testing.
  *
  * @author fsmicdev
  */
