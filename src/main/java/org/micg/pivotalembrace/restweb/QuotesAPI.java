@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- *
+ * REST API for [Quotes] in Pivotal Embrace.
  *
  * @author fsmicdev
  */

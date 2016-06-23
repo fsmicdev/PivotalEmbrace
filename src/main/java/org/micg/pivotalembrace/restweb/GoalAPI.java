@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 /**
- *
+ * REST API for [Goal]s in Pivotal Embrace.
  *
  * @author fsmicdev
  */
@@ -125,7 +125,7 @@ public class GoalAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Diary Note was created for the target Goal."),
-            @ApiResponse(code = 400, message = "A bad request due to Invalid Parameters."),
+            @ApiResponse(code = 400, message = "A bad request arising from Invalid Parameters."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response saveNewGoalDiaryNote(
