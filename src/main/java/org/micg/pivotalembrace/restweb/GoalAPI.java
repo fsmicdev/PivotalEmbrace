@@ -75,6 +75,8 @@ public class GoalAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lookup succeeded. Returned Goal via unique id."),
+            @ApiResponse(code = 400, message = "A bad request arising from Invalid Parameters."),
+            @ApiResponse(code = 404, message = "The specific Goal item was not found."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getGoal(@ApiParam(value = "Unique id of Goal.", required = true)

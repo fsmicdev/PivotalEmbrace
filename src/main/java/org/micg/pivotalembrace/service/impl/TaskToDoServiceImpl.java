@@ -3,6 +3,7 @@ package org.micg.pivotalembrace.service.impl;
 import org.micg.pivotalembrace.dataaccess.repository.TaskToDoRepository;
 import org.micg.pivotalembrace.dataaccess.sequence.SequenceDao;
 import org.micg.pivotalembrace.model.auxiliary.PriorityToAttain;
+import org.micg.pivotalembrace.model.document.Quotes;
 import org.micg.pivotalembrace.model.document.TaskToDo;
 import org.micg.pivotalembrace.service.ServiceException;
 import org.micg.pivotalembrace.service.TaskToDoService;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.NOT_FOUND;
 
 /**
  *
@@ -43,7 +47,23 @@ public class TaskToDoServiceImpl implements TaskToDoService {
 
     @Override
     public TaskToDo getTaskToDo(final Long id) throws ServiceException {
-        return taskToDoRepository.findOne(id);
+        if (id <= 0) {
+            throw new ServiceException(INVALID_PARAMS);
+        }
+
+        TaskToDo taskToDo = null;
+
+        try {
+            taskToDo = taskToDoRepository.findOne(id);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
+
+        if (taskToDo == null) {
+            throw new ServiceException(NOT_FOUND);
+        } else {
+            return taskToDo;
+        }
     }
 
     @Override

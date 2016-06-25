@@ -17,6 +17,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.NOT_FOUND;
+
 /**
  *
  *
@@ -68,7 +71,23 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public Goal getGoal(final Long id) throws ServiceException {
-        return goalRepository.findOne(id);
+        if (id <= 0) {
+            throw new ServiceException(INVALID_PARAMS);
+        }
+
+        Goal goal = null;
+
+        try {
+            goal = goalRepository.findOne(id);
+        } catch (final Exception e) {
+            throw new ServiceException(e);
+        }
+
+        if (goal == null) {
+            throw new ServiceException(NOT_FOUND);
+        } else {
+            return goal;
+        }
     }
 
     @Override

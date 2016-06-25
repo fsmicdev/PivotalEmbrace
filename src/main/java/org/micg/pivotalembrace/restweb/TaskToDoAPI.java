@@ -50,6 +50,8 @@ public class TaskToDoAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lookup succeeded. Returned Task To Do via unique id."),
+            @ApiResponse(code = 400, message = "A bad request arising from Invalid Parameters."),
+            @ApiResponse(code = 404, message = "The specific Task To Do was not found."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getTaskToDo(@ApiParam(value = "Unique id of task to do.", required = true)

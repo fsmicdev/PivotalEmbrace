@@ -5,6 +5,8 @@ import org.micg.pivotalembrace.model.apirest.ErrorRespBody;
 import org.micg.pivotalembrace.model.document.Quotes;
 import org.micg.pivotalembrace.service.QuotesService;
 import org.micg.pivotalembrace.service.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
@@ -29,6 +31,8 @@ public class QuotesAPI {
     @Autowired
     private CacheControl cacheControl;
 
+    private Logger logger = LoggerFactory.getLogger(QuotesAPI.class);
+
     @GET
     @ApiOperation("Get all Quotes.")
     @Produces((MediaType.APPLICATION_JSON))
@@ -50,6 +54,8 @@ public class QuotesAPI {
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lookup succeeded. Returned Quote via unique id."),
+            @ApiResponse(code = 400, message = "A bad request arising from Invalid Parameters."),
+            @ApiResponse(code = 404, message = "The specific Quote was not found."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
     public Response getQuote(@ApiParam(value = "Unique id of Quote.", required = true)

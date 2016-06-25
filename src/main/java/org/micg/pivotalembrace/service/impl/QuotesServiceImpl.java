@@ -13,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
+import static org.micg.pivotalembrace.model.apirest.ErrorCode.NOT_FOUND;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.micg.pivotalembrace.model.apirest.ErrorCode.INVALID_PARAMS;
 
 /**
  *
@@ -51,10 +52,22 @@ public class QuotesServiceImpl implements QuotesService {
 
     @Override
     public Quotes getQuote(final Long id) throws ServiceException {
+        if (id <= 0) {
+            throw new ServiceException(INVALID_PARAMS);
+        }
+
+        Quotes quotes = null;
+
         try {
-            return quotesRepository.findOne(id);
+            quotes = quotesRepository.findOne(id);
         } catch (final Exception e) {
             throw new ServiceException(e);
+        }
+
+        if (quotes == null) {
+            throw new ServiceException(NOT_FOUND);
+        } else {
+            return quotes;
         }
     }
 
