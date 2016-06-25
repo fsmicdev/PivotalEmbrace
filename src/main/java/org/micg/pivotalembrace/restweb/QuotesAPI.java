@@ -97,14 +97,15 @@ public class QuotesAPI {
 
     @GET
     @Path("/part")
-    @ApiOperation("Get all Quotes with a sub-part/fragment/pattern of said Quote sub-part (regular expressions supported).")
+    @ApiOperation("Get all Quotes with a sub-part pattern of said Quote sub-part (regular expressions supported).")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching Quotes."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
-    public Response getAllQuotesWithQuoteSubpart(@ApiParam(value = "Quote pattern (regular expressions supported).", required = true)
-                                                 @QueryParam("quoteSubpart") final String quoteSubpart) {
+    public Response getAllQuotesWithQuoteSubpart(
+            @ApiParam(value = "Quote sub-part pattern (regular expressions supported).", required = true)
+            @QueryParam("quoteSubpart") final String quoteSubpart) {
         try {
             return Response.ok(quotesService.getQuotesByQuotePattern(quoteSubpart)).build();
         } catch (final ServiceException se) {
@@ -114,7 +115,7 @@ public class QuotesAPI {
 
     @POST
     @Path("/quote")
-    @ApiOperation("Create and save a new Quote into Pivotal Embrace.")
+    @ApiOperation("Create and save a new Quote in Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Quote was created."),
@@ -154,7 +155,15 @@ public class QuotesAPI {
             @ApiParam(value = "Quote text.", required = true)
             @FormParam("quoteText") final String quoteText) {
         try {
-            if (quotesService.getQuote(id) == null) {
+            Quotes preExistingQuote = null;
+
+            try {
+                preExistingQuote = quotesService.getQuote(id);
+            } catch (final ServiceException se) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            if (preExistingQuote == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
                 final Quotes savedQuote =
@@ -184,7 +193,13 @@ public class QuotesAPI {
             @ApiParam(value = "Existing id of Quote to delete.", required = true)
             @PathParam(value = "id") final Long id) {
         try {
-            final Quotes preExistingQuote = quotesService.getQuote(id);
+            Quotes preExistingQuote = null;
+
+            try {
+                preExistingQuote = quotesService.getQuote(id);
+            } catch (final ServiceException se) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             if (preExistingQuote == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();

@@ -63,7 +63,7 @@ public class TaskToDoAPI {
 
     @POST
     @Path("/todo")
-    @ApiOperation("Create and save a new Task To Do item into Pivotal Embrace.")
+    @ApiOperation("Create and save a new Task To Do item in Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Task To Do item was created."),
@@ -74,7 +74,7 @@ public class TaskToDoAPI {
             @FormParam("taskToDoItemText") final String taskToDoItemText,
             @ApiParam(value = "Task To Do priority.", required = true)
             @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
-            @ApiParam(value = "Task Due Date.", required = true) // 2016-06-28 10:00:00.000
+            @ApiParam(value = "Task Due Date (format e.g.  2016-06-28 10:00:00.000).", required = true)
             @FormParam("taskDueDate") LocalDateParam taskDueDate
            ) {
         try {
@@ -107,13 +107,21 @@ public class TaskToDoAPI {
             @FormParam("taskToDoItemText") final String taskToDoItemText,
             @ApiParam(value = "Task To Do priority.", required = true)
             @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
-            @ApiParam(value = "Task Due Date.", required = true)
+            @ApiParam(value = "Task Due Date (format e.g.  2016-06-28 10:00:00.000).", required = true)
             @FormParam("taskDueDate") final LocalDateParam taskDueDate,
             @ApiParam(value = "Has the To Do item been completed?", required = true)
             @FormParam("completedFlag") final Boolean completedFlag
     ) {
         try {
-            if (taskToDoService.getTaskToDo(id) == null) {
+            TaskToDo preExistingTaskToDo = null;
+
+            try {
+                preExistingTaskToDo = taskToDoService.getTaskToDo(id);
+            } catch (final ServiceException se) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            if (preExistingTaskToDo == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
                 final TaskToDo savedToDoItem =
@@ -144,7 +152,13 @@ public class TaskToDoAPI {
             @ApiParam(value = "Existing id of Task To Do to delete.", required = true)
             @PathParam(value = "id") final Long id) {
         try {
-            final TaskToDo preExistingTaskToDo = taskToDoService.getTaskToDo(id);
+            TaskToDo preExistingTaskToDo = null;
+
+            try {
+                preExistingTaskToDo = taskToDoService.getTaskToDo(id);
+            } catch (final ServiceException se) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             if (preExistingTaskToDo == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();

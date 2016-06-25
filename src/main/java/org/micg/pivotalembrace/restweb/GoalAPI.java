@@ -88,7 +88,7 @@ public class GoalAPI {
 
     @POST
     @Path("/goal")
-    @ApiOperation("Create and save a new Goal into Pivotal Embrace.")
+    @ApiOperation("Create and save a new Goal in Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New Goal item was created."),
@@ -101,7 +101,7 @@ public class GoalAPI {
             @FormParam("goalDescription") final String goalDescription,
             @ApiParam(value = "Priority to attain Goal.", required = true)
             @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
-            @ApiParam(value = "Goal achieve by target date.", required = true)
+            @ApiParam(value = "Goal achieve by target date (format e.g.  2016-06-28 10:00:00.000).", required = true)
             @FormParam("toAchieveByTargetDate") final LocalDateParam toAchieveByTargetDate,
             @ApiParam(value = "Goal percentage complete [0-100; defaults to 0]", required = false)
             @FormParam("percentageComplete") final BigDecimal percentageComplete) {
@@ -133,7 +133,7 @@ public class GoalAPI {
             @PathParam(value = "id") final Long id,
             @ApiParam(value = "New Diary Note text for Goal.", required = true)
             @FormParam("diaryNote") final String diaryNoteText,
-            @ApiParam(value = "Date of Diary Note.", required = true)
+            @ApiParam(value = "Date of Diary Note (format e.g.  2016-06-28 10:00:00.000).", required = true)
             @FormParam("diaryNoteDate") final LocalDateParam diaryNoteDate,
             @ApiParam(value = "Keep Diary Note private?", required = true)
             @FormParam("privateDiaryNoteFlag") final boolean privateDiaryNoteFlag,
@@ -191,12 +191,20 @@ public class GoalAPI {
             @FormParam("goalDescription") final String goalDescription,
             @ApiParam(value = "Priority to attain Goal.", required = true)
             @FormParam("priorityToAttain") final PriorityToAttain priorityToAttain,
-            @ApiParam(value = "Goal achieve by target date.", required = true)
+            @ApiParam(value = "Goal achieve by target date (format e.g.  2016-06-28 10:00:00.000).", required = true)
             @FormParam("toAchieveTargetDate") final LocalDateParam toAchieveTargetDate,
             @ApiParam(value = "Goal percentage complete [0-100]", required = true)
             @FormParam("percentageComplete") final BigDecimal percentageComplete) {
         try {
-            if (goalService.getGoal(id) == null) {
+            Goal preExistingGoal = null;
+
+            try {
+                preExistingGoal = goalService.getGoal(id);
+            } catch (final ServiceException se) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            if (preExistingGoal == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
                 final Goal savedGoal =
@@ -227,7 +235,13 @@ public class GoalAPI {
             @ApiParam(value = "Existing id of Goal to delete.", required = true)
             @PathParam(value = "id") final Long id) {
         try {
-            final Goal preExistingGoal = goalService.getGoal(id);
+            Goal preExistingGoal = null;
+
+            try {
+                preExistingGoal = goalService.getGoal(id);
+            } catch (final ServiceException se) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             if (preExistingGoal == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
