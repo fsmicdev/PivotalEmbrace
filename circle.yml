@@ -1,0 +1,3 @@
+test:
+    post:
+- python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
