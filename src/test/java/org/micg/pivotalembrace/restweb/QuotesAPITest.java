@@ -111,16 +111,16 @@ public class QuotesAPITest {
             assertThat(quotesList, hasSize(2));
             assertThat(quotesList, equalTo(quotes));
 
-            Quotes quoteOneRes = quotesList.get(0);
-            Quotes quoteTwoRes = quotesList.get(1);
+            Quotes quoteOneReturned = quotesList.get(0);
+            Quotes quoteTwoReturned = quotesList.get(1);
 
-            assertThat(quoteOneRes.getId(), is(equalTo(1L)));
-            assertThat(quoteOneRes.getPerson(), is(equalTo("Albert Einstein")));
-            assertThat(quoteOneRes.getQuote(), is(equalTo("Anyone who has never made a mistake has never tried anything new.")));
+            assertThat(quoteOneReturned.getId(), is(equalTo(1L)));
+            assertThat(quoteOneReturned.getPerson(), is(equalTo("Albert Einstein")));
+            assertThat(quoteOneReturned.getQuote(), is(equalTo("Anyone who has never made a mistake has never tried anything new.")));
 
-            assertThat(quoteTwoRes.getId(), is(equalTo(2L)));
-            assertThat(quoteTwoRes.getPerson(), is(equalTo("Martin Fowler")));
-            assertThat(quoteTwoRes.getQuote(), is(equalTo("Any fool can write code that a computer can understand. Good programmers write code that humans can understand.")));
+            assertThat(quoteTwoReturned.getId(), is(equalTo(2L)));
+            assertThat(quoteTwoReturned.getPerson(), is(equalTo("Martin Fowler")));
+            assertThat(quoteTwoReturned.getQuote(), is(equalTo("Any fool can write code that a computer can understand. Good programmers write code that humans can understand.")));
         } catch (final ServiceException se) {
             fail("No ServiceException should've been thrown");
         }
@@ -188,11 +188,11 @@ public class QuotesAPITest {
 
             assertThat(respEntity, is(notNullValue()));
 
-            Quotes quoteEntityRet = (Quotes)respEntity;
+            Quotes quoteEntityReturned = (Quotes)respEntity;
 
-            assertThat(quoteEntityRet.getId(), is(equalTo(1L)));
-            assertThat(quoteEntityRet.getPerson(), is(equalTo("Albert Einstein")));
-            assertThat(quoteEntityRet.getQuote(), is(equalTo("Anyone who has never made a mistake has never tried anything new.")));
+            assertThat(quoteEntityReturned.getId(), is(equalTo(1L)));
+            assertThat(quoteEntityReturned.getPerson(), is(equalTo("Albert Einstein")));
+            assertThat(quoteEntityReturned.getQuote(), is(equalTo("Anyone who has never made a mistake has never tried anything new.")));
         } catch (final ServiceException se) {
             fail("No ServiceException should've been thrown");
         }
@@ -363,14 +363,14 @@ public class QuotesAPITest {
 
             assertThat(respEntity, is(notNullValue()));
 
-            Quotes updatedQuoteRet = (Quotes)respEntity;
+            Quotes updatedQuoteReturned = (Quotes)respEntity;
 
-            assertThat(updatedQuoteRet, is(notNullValue()));
-            assertThat(updatedQuoteRet.getId(), is(equalTo(existingId)));
-            assertThat(updatedQuoteRet.getQuote(), is(equalTo(updatedQuoteText)));
-            assertThat(updatedQuoteRet.getPerson(), is(equalTo(quoteAuthor)));
+            assertThat(updatedQuoteReturned, is(notNullValue()));
+            assertThat(updatedQuoteReturned.getId(), is(equalTo(existingId)));
+            assertThat(updatedQuoteReturned.getQuote(), is(equalTo(updatedQuoteText)));
+            assertThat(updatedQuoteReturned.getPerson(), is(equalTo(quoteAuthor)));
 
-            assertThat(updatedQuoteRet, is(equalTo(updatedQuote)));
+            assertThat(updatedQuoteReturned, is(equalTo(updatedQuote)));
         } catch (final ServiceException se) {
             fail("No ServiceException should've been thrown");
         }
