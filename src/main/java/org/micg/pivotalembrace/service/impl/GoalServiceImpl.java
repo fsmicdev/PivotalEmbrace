@@ -97,7 +97,7 @@ public class GoalServiceImpl implements GoalService {
 
         try {
             final Long nextIdVal = sequenceDao.getNextSequenceId(GOAL_SEQ_KEY);
-            logger.info("##### nextIdVal: " + nextIdVal);
+            logger.debug("##### nextIdVal: " + nextIdVal);
 
             goal.setId(nextIdVal);
             goal.setGoalTitle(goalTitle);

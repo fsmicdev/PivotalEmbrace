@@ -72,7 +72,7 @@ public class TaskToDoServiceImpl implements TaskToDoService {
 
         try {
             final Long nextIdVal = sequenceDao.getNextSequenceId(TASK_TO_DO_SEQ_KEY);
-            logger.info("##### nextIdVal: " + nextIdVal);
+            logger.debug("##### nextIdVal: " + nextIdVal);
 
             taskToDo.setId(nextIdVal);
             taskToDo.setTask(taskToDoItemText);

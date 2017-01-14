@@ -112,7 +112,7 @@ public class QuotesServiceImpl implements QuotesService {
 
         try {
             final Long nextIdVal = sequenceDao.getNextSequenceId(QUOTES_SEQ_KEY);
-            logger.info("##### nextIdVal: " + nextIdVal);
+            logger.debug("##### nextIdVal: " + nextIdVal);
 
             quote.setId(nextIdVal);
             quote.setPerson(author);

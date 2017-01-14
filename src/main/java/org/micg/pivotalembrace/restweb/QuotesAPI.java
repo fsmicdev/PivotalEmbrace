@@ -161,7 +161,7 @@ public class QuotesAPI {
             @ApiParam(value = "Quote text.", required = true)
             @FormParam("quoteText") final String quoteText) {
         try {
-            Quotes preExistingQuote = null;
+            Quotes preExistingQuote;
 
             try {
                 preExistingQuote = quotesService.getQuote(id);
@@ -176,7 +176,7 @@ public class QuotesAPI {
                         quotesService.update(id, quoteText, quotedPerson);
 
                 if ((savedQuote != null) && (savedQuote.getId() != null)) {
-                    return Response.status(Response.Status.OK).build();
+                    return Response.ok(savedQuote).build();
                 } else {
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
                 }
