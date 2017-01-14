@@ -17,7 +17,7 @@ public interface QuotesService {
 
     Quotes getQuote(final Long id) throws ServiceException;
 
-    List<Quotes> getQuotesByPerson(final String person) throws ServiceException;
+    List<Quotes> getAllQuotesByPerson(final String person) throws ServiceException;
 
     List<Quotes> getQuotesByQuotePattern(final String quotePattern) throws ServiceException;
 

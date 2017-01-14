@@ -54,7 +54,7 @@ public class PivotalEmbraceSpringApp implements CommandLineRunner {
         // ------------------------------------------------
         log.info("Quotes found with findByPerson('Albert Einstein'):");
         log.info("-------------------------------------------------");
-        for (final Quotes quote : quotesService.getQuotesByPerson("Albert Einstein")) {
+        for (final Quotes quote : quotesService.getAllQuotesByPerson("Albert Einstein")) {
             log.info(quote.toString());
         }
 

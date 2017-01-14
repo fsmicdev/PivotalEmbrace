@@ -332,6 +332,134 @@ public class QuotesAPITest {
     }
 
     @Test
+    public void getAllQuotesByPerson_queryProblemWhenContactingDatabase_500StatusAndServerErrorMsgReturned() {
+        try {
+            String martinFowlerAuthor = "Martin Fowler";
+
+            // Expectations
+            when(quotesService.getAllQuotesByPerson(martinFowlerAuthor)).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = quotesAPI.getAllQuotesByPerson(martinFowlerAuthor);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getAllQuotesByPerson(martinFowlerAuthor);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void getAllQuotesByPerson_authorToSearchBySupplied_200StatusAndQuotesForAuthorReturned() {
+        try {
+            String martinFowlerAuthor = "Martin Fowler";
+
+            List<Quotes> martinFowlerQuotes = new ArrayList<>();
+            martinFowlerQuotes.add(quoteTwo);
+
+            // Expectations
+            when(quotesService.getAllQuotesByPerson(martinFowlerAuthor)).thenReturn(martinFowlerQuotes);
+
+            // Call the actual method under test
+            Response response = quotesAPI.getAllQuotesByPerson(martinFowlerAuthor);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getAllQuotesByPerson(martinFowlerAuthor);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.OK.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(notNullValue()));
+
+            List<Quotes> quotesReturned = (List<Quotes>)respEntity;
+
+            assertThat(quotesReturned, hasSize(1));
+
+            Quotes quoteByMartinFowler = quotesReturned.iterator().next();
+
+            assertThat(quoteByMartinFowler.getId(), is(equalTo(2L)));
+            assertThat(quoteByMartinFowler.getPerson(), is(equalTo(martinFowlerAuthor)));
+            assertThat(quoteByMartinFowler.getQuote(), is(equalTo("Any fool can write code that a computer can understand. Good programmers write code that humans can understand.")));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    public void getQuotesByQuotePattern_queryProblemWhenContactingDatabase_500StatusAndServerErrorMsgReturned() {
+        try {
+            String quoteSubPart = "programmers write";
+
+            // Expectations
+            when(quotesService.getQuotesByQuotePattern(quoteSubPart)).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = quotesAPI.getQuotesByQuotePattern(quoteSubPart);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getQuotesByQuotePattern(quoteSubPart);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void getQuotesByQuotePattern_queryProblemWhenContactingDatabase_200StatusAndQuotesMatchingSubpartReturnedReturned() {
+        try {
+            String quoteSubPart = "programmers write";
+
+            List<Quotes> programmersWriteQuotes = new ArrayList<>();
+            programmersWriteQuotes.add(quoteTwo);
+            // Expectations
+            when(quotesService.getQuotesByQuotePattern(quoteSubPart)).thenReturn(programmersWriteQuotes);
+
+            // Call the actual method under test
+            Response response = quotesAPI.getQuotesByQuotePattern(quoteSubPart);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getQuotesByQuotePattern(quoteSubPart);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.OK.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(notNullValue()));
+
+            List<Quotes> quotesReturned = (List<Quotes>)respEntity;
+
+            assertThat(quotesReturned, hasSize(1));
+
+            Quotes quoteByMartinFowler = quotesReturned.iterator().next();
+
+            assertThat(quoteByMartinFowler.getId(), is(equalTo(2L)));
+            assertThat(quoteByMartinFowler.getPerson(), is(equalTo("Martin Fowler")));
+            assertThat(quoteByMartinFowler.getQuote(), is(equalTo("Any fool can write code that a computer can understand. Good programmers write code that humans can understand.")));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
     public void saveNewQuote_problemPersistingQuote_500StatusAndInternalServerMsg() {
         try {
             // Expectations

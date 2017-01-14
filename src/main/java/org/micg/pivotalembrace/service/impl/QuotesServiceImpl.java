@@ -72,7 +72,7 @@ public class QuotesServiceImpl implements QuotesService {
     }
 
     @Override
-    public List<Quotes> getQuotesByPerson(final String person) throws ServiceException {
+    public List<Quotes> getAllQuotesByPerson(final String person) throws ServiceException {
         try {
             if (StringUtils.isEmpty(person)) {
                 throw new ServiceException(INVALID_PARAMS);

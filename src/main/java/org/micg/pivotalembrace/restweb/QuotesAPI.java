@@ -95,7 +95,7 @@ public class QuotesAPI {
     public Response getAllQuotesByPerson(@ApiParam(value = "Author of Quote.", required = true)
                                          @QueryParam("quotePerson") final String quotePerson) {
         try {
-            return Response.ok(quotesService.getQuotesByPerson(quotePerson)).build();
+            return Response.ok(quotesService.getAllQuotesByPerson(quotePerson)).build();
         } catch (final ServiceException se) {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
         }
@@ -109,7 +109,7 @@ public class QuotesAPI {
             @ApiResponse(code = 200, message = "Lookup succeeded. Returned matching Quotes."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
-    public Response getAllQuotesWithQuoteSubpart(
+    public Response getQuotesByQuotePattern(
             @ApiParam(value = "Quote sub-part pattern (regular expressions supported).", required = true)
             @QueryParam("quoteSubpart") final String quoteSubpart) {
         try {
