@@ -76,7 +76,7 @@ public class PivotalEmbraceSpringApp implements CommandLineRunner {
         // ---------------------------------------------------------------
         log.info("Quote authors and respective quote counts are:");
         log.info("---------------------------------------------");
-        final Map<String, AtomicInteger> authorsMap = quotesService.getAllAuthorsAndQuoteCount();
+        final Map<String, AtomicInteger> authorsMap = quotesService.getAllAuthorsAndAuthorQuoteCount();
 
         for (final String author : authorsMap.keySet()) {
             final AtomicInteger quoteCountForAuthor = authorsMap.get(author);

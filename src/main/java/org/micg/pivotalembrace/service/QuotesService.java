@@ -21,7 +21,7 @@ public interface QuotesService {
 
     List<Quotes> getQuotesByQuotePattern(final String quotePattern) throws ServiceException;
 
-    Map<String, AtomicInteger> getAllAuthorsAndQuoteCount() throws ServiceException;
+    Map<String, AtomicInteger> getAllAuthorsAndAuthorQuoteCount() throws ServiceException;
 
     Quotes save(final String quote, final String author) throws ServiceException;
 

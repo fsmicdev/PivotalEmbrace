@@ -78,7 +78,7 @@ public class QuotesAPI {
     })
     public Response getAllAuthorsAndAuthorQuoteCount() {
         try {
-            return Response.ok(quotesService.getAllAuthorsAndQuoteCount()).cacheControl(cacheControl).build();
+            return Response.ok(quotesService.getAllAuthorsAndAuthorQuoteCount()).cacheControl(cacheControl).build();
         } catch (final ServiceException se) {
             return Response.status(se.getErrorCode().getHttpStatusErrorCode()).build();
         }

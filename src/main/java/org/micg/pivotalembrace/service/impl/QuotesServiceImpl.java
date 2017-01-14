@@ -98,7 +98,7 @@ public class QuotesServiceImpl implements QuotesService {
     }
 
     @Override
-    public Map<String, AtomicInteger> getAllAuthorsAndQuoteCount() throws ServiceException {
+    public Map<String, AtomicInteger> getAllAuthorsAndAuthorQuoteCount() throws ServiceException {
         try {
             return quotesTemplate.findQuoteAuthorsAndQuoteCount();
         } catch (final Exception e) {

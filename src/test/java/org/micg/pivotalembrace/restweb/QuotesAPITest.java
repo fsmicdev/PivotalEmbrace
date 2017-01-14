@@ -58,6 +58,18 @@ public class QuotesAPITest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    private String quoteText;
+
+    private Long existingId;
+    private String quoteAuthor;
+    private String preExistingQuoteText;
+    private String updatedQuoteText;
+
+    private Quotes savedQuote;
+    private Quotes updatedQuote;
+
+    private Long nonExistingId;
+
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -85,6 +97,25 @@ public class QuotesAPITest {
         quotesAuthorsToQuoteCountMap = new HashMap<>();
         quotesAuthorsToQuoteCountMap.put("Albert Einstein", new AtomicInteger(2));
         quotesAuthorsToQuoteCountMap.put("Martin Fowler", new AtomicInteger(1));
+
+        quoteText = "A very interesting quote, indeed";
+
+        existingId = 159L;
+        quoteAuthor = "Joe Bloggs";
+        preExistingQuoteText = quoteText;
+        updatedQuoteText = preExistingQuoteText + " (updated)";
+
+        savedQuote = new Quotes();
+        savedQuote.setQuote(preExistingQuoteText);
+        savedQuote.setPerson(quoteAuthor);
+        savedQuote.setId(existingId);
+
+        updatedQuote = new Quotes();
+        updatedQuote.setQuote(updatedQuoteText);
+        updatedQuote.setPerson(quoteAuthor);
+        updatedQuote.setId(existingId);
+
+        nonExistingId = 1000000123L;
     }
 
     @Test
@@ -121,6 +152,30 @@ public class QuotesAPITest {
             assertThat(quoteTwoReturned.getId(), is(equalTo(2L)));
             assertThat(quoteTwoReturned.getPerson(), is(equalTo("Martin Fowler")));
             assertThat(quoteTwoReturned.getQuote(), is(equalTo("Any fool can write code that a computer can understand. Good programmers write code that humans can understand.")));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void getAllQuotes_problemQueryingAllQuotes_500StatusAndInternalServerMsg() {
+        try {
+            // Expectations
+            when(quotesService.getAllQuotes()).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = quotesAPI.getAllQuotes();
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getAllQuotes();
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
         } catch (final ServiceException se) {
             fail("No ServiceException should've been thrown");
         }
@@ -165,22 +220,41 @@ public class QuotesAPITest {
         assertThat(respEntity, is(nullValue()));
 
         assertThat(response.getStatus(), is(equalTo(NOT_FOUND.getHttpStatusErrorCode())));
+    }
 
+    @Test
+    public void getQuote_problemQueryingQuote_500StatusAndInternalServerMsg() throws ServiceException {
+        // Expectations
+        when(quotesService.getQuote(existingId)).thenThrow(new ServiceException(SERVER_ERROR));
+
+        // Call the actual method under test
+        Response response = quotesAPI.getQuote(existingId);
+
+        // Verify (and Validation)
+        assertThat(response, is(notNullValue()));
+
+        verify(quotesService).getQuote(existingId);
+
+        assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+        Object respEntity = response.getEntity();
+
+        assertThat(respEntity, is(nullValue()));
     }
 
     @Test
     public void getQuote_plausibleId_200StatusAndQuoteReturned() {
         try {
             // Expectations
-            when(quotesService.getQuote(1L)).thenReturn(quoteOne);
+            when(quotesService.getQuote(existingId)).thenReturn(quoteOne);
 
             // Call the actual method under test
-            Response response = quotesAPI.getQuote(1L);
+            Response response = quotesAPI.getQuote(existingId);
 
             // Verify (and Validation)
             assertThat(response, is(notNullValue()));
 
-            verify(quotesService).getQuote(1L);
+            verify(quotesService).getQuote(existingId);
 
             assertThat(response.getStatus(), is(equalTo(Response.Status.OK.getStatusCode())));
 
@@ -199,10 +273,10 @@ public class QuotesAPITest {
     }
 
     @Test
-    public void getAllAuthorsAndAuthorQuoteCount_success_200StatusAndQuotesCountReturned() {
+    public void getAllAuthorsAndAuthorQuoteCount_problemQueryingAllAuthorsAndAuthorQuoteCount_500StatusAndInternalServerMsg() {
         try {
             // Expectations
-            when(quotesService.getAllAuthorsAndQuoteCount()).thenReturn(quotesAuthorsToQuoteCountMap);
+            when(quotesService.getAllAuthorsAndAuthorQuoteCount()).thenThrow(new ServiceException(SERVER_ERROR));
 
             // Call the actual method under test
             Response response = quotesAPI.getAllAuthorsAndAuthorQuoteCount();
@@ -210,7 +284,31 @@ public class QuotesAPITest {
             // Verify (and Validation)
             assertThat(response, is(notNullValue()));
 
-            verify(quotesService).getAllAuthorsAndQuoteCount();
+            verify(quotesService).getAllAuthorsAndAuthorQuoteCount();
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void getAllAuthorsAndAuthorQuoteCount_success_200StatusAndQuotesCountReturned() {
+        try {
+            // Expectations
+            when(quotesService.getAllAuthorsAndAuthorQuoteCount()).thenReturn(quotesAuthorsToQuoteCountMap);
+
+            // Call the actual method under test
+            Response response = quotesAPI.getAllAuthorsAndAuthorQuoteCount();
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getAllAuthorsAndAuthorQuoteCount();
 
             assertThat(response.getStatus(), is(equalTo(Response.Status.OK.getStatusCode())));
 
@@ -234,48 +332,8 @@ public class QuotesAPITest {
     }
 
     @Test
-    public void saveNewQuote_newQuote_201StatusAndCreatedMsg() {
+    public void saveNewQuote_problemPersistingQuote_500StatusAndInternalServerMsg() {
         try {
-            String quoteAuthor = "Joe Bloggs";
-            String quoteText = "A very interesting quote, indeed";
-
-            Quotes savedQuote = new Quotes();
-            savedQuote.setQuote(quoteText);
-            savedQuote.setPerson(quoteAuthor);
-            savedQuote.setId(501L);
-
-            // Expectations
-            when(quotesService.save(quoteText, quoteAuthor)).thenReturn(savedQuote);
-
-            // Call the actual method under test
-            Response response = quotesAPI.saveNewQuote(quoteAuthor, quoteText);
-
-            // Verify (and Validation)
-            assertThat(response, is(notNullValue()));
-
-            verify(quotesService).save(quoteText, quoteAuthor);
-
-            assertThat(response.getStatus(), is(equalTo(Response.Status.CREATED.getStatusCode())));
-
-            Object respEntity = response.getEntity();
-
-            assertThat(respEntity, is(nullValue()));
-        } catch (final ServiceException se) {
-            fail("No ServiceException should've been thrown");
-        }
-    }
-
-    @Test
-    public void saveNewQuote_problemUpdatingQuote_500StatusAndInternalServerMsg() {
-        try {
-            String quoteAuthor = "Joe Bloggs";
-            String quoteText = "A very interesting quote, indeed";
-
-            Quotes savedQuote = new Quotes();
-            savedQuote.setQuote(quoteText);
-            savedQuote.setPerson(quoteAuthor);
-            savedQuote.setId(null);
-
             // Expectations
             when(quotesService.save(quoteText, quoteAuthor)).thenThrow(new ServiceException(SERVER_ERROR));
 
@@ -298,12 +356,32 @@ public class QuotesAPITest {
     }
 
     @Test
+    public void saveNewQuote_newQuote_201StatusAndCreatedMsg() {
+        try {
+            // Expectations
+            when(quotesService.save(quoteText, quoteAuthor)).thenReturn(savedQuote);
+
+            // Call the actual method under test
+            Response response = quotesAPI.saveNewQuote(quoteAuthor, quoteText);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).save(quoteText, quoteAuthor);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.CREATED.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
     public void updateQuote_nonPreExistingQuote_404StatusAndNotFoundMsgReturned() {
         try {
-            Long nonExistingId = 1000000123L;
-            String quoteAuthor = "Joe Bloggs";
-            String quoteText = "A very interesting quote, indeed";
-
             // Expectations
             when(quotesService.getQuote(nonExistingId)).thenReturn(null);
 
@@ -327,23 +405,34 @@ public class QuotesAPITest {
     }
 
     @Test
+    public void saveNewQuote_problemUpdatingQuoteInDB_500StatusAndInternalServerMsg() {
+        try {
+            // Expectations
+            when(quotesService.getQuote(existingId)).thenReturn(savedQuote);
+            when(quotesService.update(existingId, quoteText, quoteAuthor)).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = quotesAPI.updateQuote(existingId, quoteAuthor, quoteText);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getQuote(existingId);
+            verify(quotesService).update(existingId, quoteText, quoteAuthor);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
     public void updateQuote_preExistingQuote_200StatusAndUpdatedQuoteReturned() {
         try {
-            Long existingId = 159L;
-            String quoteAuthor = "Joe Bloggs";
-            String preExistingQuoteText = "A very interesting quote, indeed";
-            String updatedQuoteText = "A very interesting quote, indeed (updated)";
-
-            Quotes savedQuote = new Quotes();
-            savedQuote.setQuote(preExistingQuoteText);
-            savedQuote.setPerson(quoteAuthor);
-            savedQuote.setId(existingId);
-
-            Quotes updatedQuote = new Quotes();
-            updatedQuote.setQuote(updatedQuoteText);
-            updatedQuote.setPerson(quoteAuthor);
-            updatedQuote.setId(existingId);
-
             // Expectations
             when(quotesService.getQuote(existingId)).thenReturn(savedQuote);
             when(quotesService.update(existingId, updatedQuoteText, quoteAuthor)).thenReturn(updatedQuote);
@@ -379,8 +468,6 @@ public class QuotesAPITest {
     @Test
     public void deleteQuote_nonPreExistingQuote_404StatusAndNotFoundMsgReturned() {
         try {
-            Long nonExistingId = 1000000123L;
-
             // Expectations
             when(quotesService.getQuote(nonExistingId)).thenReturn(null);
 
@@ -404,17 +491,34 @@ public class QuotesAPITest {
     }
 
     @Test
+    public void deleteQuote_problemDeletingQuoteInDB_500StatusAndInternalServerMsg() {
+        try {
+            // Expectations
+            when(quotesService.getQuote(existingId)).thenReturn(savedQuote);
+            when(quotesService.delete(savedQuote)).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = quotesAPI.deleteQuote(existingId);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getQuote(existingId);
+            verify(quotesService).delete(savedQuote);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
     public void deleteQuote_preExistingQuote_200Status() {
         try {
-            Long existingId = 159L;
-            String quoteAuthor = "Joe Bloggs";
-            String preExistingQuoteText = "A very interesting quote, indeed";
-
-            Quotes savedQuote = new Quotes();
-            savedQuote.setQuote(preExistingQuoteText);
-            savedQuote.setPerson(quoteAuthor);
-            savedQuote.setId(existingId);
-
             // Expectations
             when(quotesService.getQuote(existingId)).thenReturn(savedQuote);
             when(quotesService.delete(savedQuote)).thenReturn(true);
