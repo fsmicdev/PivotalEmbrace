@@ -396,6 +396,7 @@ public class QuotesAPITest {
         }
     }
 
+    @Test
     public void getQuotesByQuotePattern_queryProblemWhenContactingDatabase_500StatusAndServerErrorMsgReturned() {
         try {
             String quoteSubPart = "programmers write";
@@ -422,7 +423,7 @@ public class QuotesAPITest {
     }
 
     @Test
-    public void getQuotesByQuotePattern_queryProblemWhenContactingDatabase_200StatusAndQuotesMatchingSubpartReturnedReturned() {
+    public void getQuotesByQuotePattern_success_200StatusAndQuotesMatchingSubpartReturnedReturned() {
         try {
             String quoteSubPart = "programmers write";
 
