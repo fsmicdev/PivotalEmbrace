@@ -405,7 +405,7 @@ public class QuotesAPITest {
     }
 
     @Test
-    public void saveNewQuote_problemUpdatingQuoteInDB_500StatusAndInternalServerMsg() {
+    public void updateQuote_problemUpdatingQuoteInDB_500StatusAndInternalServerMsg() {
         try {
             // Expectations
             when(quotesService.getQuote(existingId)).thenReturn(savedQuote);
