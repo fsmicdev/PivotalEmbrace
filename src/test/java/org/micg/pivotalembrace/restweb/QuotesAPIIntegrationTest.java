@@ -17,7 +17,7 @@ import static io.restassured.RestAssured.*;
 import static io.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 /**
- *
+ * End-to-end (REST to DB) Integration Test for the <code>Quotes</code> API.
  *
  * @author fsmicdev
  */
