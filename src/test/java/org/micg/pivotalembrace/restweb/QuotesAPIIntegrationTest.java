@@ -122,4 +122,44 @@ public class QuotesAPIIntegrationTest {
         assertThat(jsonAsMap.get("Martin Fowler"), greaterThan(0));
     }
 
+    @Test
+    public void getAllQuotesByPerson_preExistingAuthorToSearchBySupplied_200StatusAndQuotesForAuthorReturned() {
+        Response response = given().
+                param("quotePerson", "Albert Einstein").
+                when().
+                get("/person").
+                then().
+                assertThat().
+                statusCode(200).
+                extract().
+                response();
+
+        String jsonResponseAsStr = response.asString();
+
+        ArrayList<Map<String,?>> jsonAsArrayList = from(jsonResponseAsStr).get("");
+
+        assertThat(jsonAsArrayList.size(), greaterThan(1));
+
+        assertThat(jsonAsArrayList.iterator().next().get("person"), equalTo("Albert Einstein"));
+    }
+
+    @Test
+    public void getAllQuotesByPerson_nonExistingAuthorToSearchBySupplied_200StatusAndNoQuotesForAuthorReturned() {
+        Response response = given().
+                param("quotePerson", "Princess Nobody!").
+                when().
+                get("/person").
+                then().
+                assertThat().
+                statusCode(200).
+                extract().
+                response();
+
+        String jsonResponseAsStr = response.asString();
+
+        ArrayList<Map<String,?>> jsonAsArrayList = from(jsonResponseAsStr).get("");
+
+        assertThat(jsonAsArrayList.size(), equalTo(0));
+    }
+
 }
