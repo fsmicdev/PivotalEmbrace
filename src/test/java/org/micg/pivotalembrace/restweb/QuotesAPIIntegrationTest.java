@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
 /**
- * End-to-end (REST to DB) Integration Test for the <code>Quotes</code> API.
+ * End-to-end (REST to DB) Integration Test for the <code>QuotesAPI</code> REST API.
  *
  * @author fsmicdev
  */
