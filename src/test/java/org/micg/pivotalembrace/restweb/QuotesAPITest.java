@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- *
+ * Unit test class for the <code>QuotesAPI</code> class.
  *
  * @author fsmicdev
  */
@@ -47,16 +47,16 @@ public class QuotesAPITest {
     @InjectMocks
     private QuotesAPI quotesAPI;
 
-    private List quotes;
-
-    private Quotes quoteOne;
-    private Quotes quoteTwo;
-    private Quotes quoteThree;
-
     private Map<String, AtomicInteger> quotesAuthorsToQuoteCountMap = new HashMap<>();
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
+
+    private List<Quotes> quotes;
+
+    private Quotes quoteOne;
+    private Quotes quoteTwo;
+    private Quotes quoteThree;
 
     private String quoteText;
 
@@ -74,7 +74,7 @@ public class QuotesAPITest {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        quotes = new ArrayList();
+        quotes = new ArrayList<>();
 
         quoteOne = new Quotes();
         quoteOne.setId(1L);
@@ -119,6 +119,30 @@ public class QuotesAPITest {
     }
 
     @Test
+    public void getAllQuotes_problemQueryingAllQuotes_500StatusAndInternalServerMsg() {
+        try {
+            // Expectations
+            when(quotesService.getAllQuotes()).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = quotesAPI.getAllQuotes();
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(quotesService).getAllQuotes();
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
     public void getAllQuotes_success_200StatusAndAllQuotesReturned() {
         try {
             // Expectations
@@ -152,30 +176,6 @@ public class QuotesAPITest {
             assertThat(quoteTwoReturned.getId(), is(equalTo(2L)));
             assertThat(quoteTwoReturned.getPerson(), is(equalTo("Martin Fowler")));
             assertThat(quoteTwoReturned.getQuote(), is(equalTo("Any fool can write code that a computer can understand. Good programmers write code that humans can understand.")));
-        } catch (final ServiceException se) {
-            fail("No ServiceException should've been thrown");
-        }
-    }
-
-    @Test
-    public void getAllQuotes_problemQueryingAllQuotes_500StatusAndInternalServerMsg() {
-        try {
-            // Expectations
-            when(quotesService.getAllQuotes()).thenThrow(new ServiceException(SERVER_ERROR));
-
-            // Call the actual method under test
-            Response response = quotesAPI.getAllQuotes();
-
-            // Verify (and Validation)
-            assertThat(response, is(notNullValue()));
-
-            verify(quotesService).getAllQuotes();
-
-            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
-
-            Object respEntity = response.getEntity();
-
-            assertThat(respEntity, is(nullValue()));
         } catch (final ServiceException se) {
             fail("No ServiceException should've been thrown");
         }
