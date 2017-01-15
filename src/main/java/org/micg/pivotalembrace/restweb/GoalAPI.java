@@ -126,7 +126,7 @@ public class GoalAPI {
     @ApiOperation("Add a Diary Note to an existing Goal in Pivotal Embrace.")
     @Produces((MediaType.APPLICATION_JSON))
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "New Diary Note was created for the target Goal."),
+            @ApiResponse(code = 200, message = "New Diary Note was created for the target Goal."),
             @ApiResponse(code = 400, message = "A bad request arising from Invalid Parameters."),
             @ApiResponse(code = 500, message = "Unexpected Server Error.", response = ErrorRespBody.class)
     })
@@ -166,7 +166,7 @@ public class GoalAPI {
             final Goal updatedGoal = goalService.update(existingGoal);
 
             if ((updatedGoal != null) && (updatedGoal.getId() != null)) {
-                return Response.status(Response.Status.CREATED).build();
+                return Response.ok(updatedGoal).build();
             } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
@@ -214,7 +214,7 @@ public class GoalAPI {
                                 DatesUtility.asDate(toAchieveTargetDate.getLocalDate()), percentageComplete);
 
                 if ((savedGoal != null) && (savedGoal.getId() != null)) {
-                    return Response.status(Response.Status.OK).build();
+                    return Response.ok(savedGoal).build();
                 } else {
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
                 }

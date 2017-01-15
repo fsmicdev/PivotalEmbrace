@@ -1,31 +1,19 @@
 package org.micg.pivotalembrace.restweb;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import org.apache.tomcat.jni.Local;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.micg.pivotalembrace.model.apirest.ErrorRespBody;
 import org.micg.pivotalembrace.model.auxiliary.DiaryNote;
 import org.micg.pivotalembrace.model.auxiliary.PriorityToAttain;
 import org.micg.pivotalembrace.model.document.Goal;
 import org.micg.pivotalembrace.model.filters.LocalDateParam;
 import org.micg.pivotalembrace.service.GoalService;
 import org.micg.pivotalembrace.service.ServiceException;
-import org.micg.pivotalembrace.util.DatesUtility;
-import org.micg.pivotalembrace.validators.GeoCoordValidator;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -78,6 +66,12 @@ public class GoalAPITest {
 
     private Long nonExistingId;
 
+    private LocalDate localDate = LocalDate.now();
+
+    private Date dateNow = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+    private LocalDateParam localDateParam = new LocalDateParam(dateNow.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -90,18 +84,21 @@ public class GoalAPITest {
         goalOne.setGoalTitle("Run Gold Coast Marathon 2017");
         goalOne.setDescription("Without stopping to rest or walk, run the Gold Coast Marathon (i.e. 42Km) in July 2017");
         goalOne.setPercentageAchieved(BigDecimal.ZERO);
+        goalOne.setDiaryNotes(new ArrayList<>());
 
         goalTwo = new Goal();
         goalTwo.setId(2L);
         goalTwo.setGoalTitle("Eat more fresh fruit and vegetables");
         goalTwo.setDescription("Increase my consumption of fruit and vegetables - at least 3 or 4 servings/day.");
         goalTwo.setPercentageAchieved(BigDecimal.TEN.multiply(BigDecimal.TEN));
+        goalTwo.setDiaryNotes(new ArrayList<>());
 
         goalThree = new Goal();
         goalThree.setId(3L);
         goalThree.setGoalTitle("Travel more");
         goalThree.setDescription("Try to make more time and investment in holidays overseas; at least once every couple of years.");
         goalThree.setPercentageAchieved(BigDecimal.TEN);
+        goalThree.setDiaryNotes(new ArrayList<>());
 
         goals.add(goalOne);
         goals.add(goalTwo);
@@ -373,12 +370,6 @@ public class GoalAPITest {
     @Test
     public void saveNewGoal_newGoal_201StatusAndCreatedMsg() {
         try {
-            LocalDate localDate = LocalDate.now();
-
-            Date dateNow = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-            LocalDateParam localDateParam = new LocalDateParam(dateNow.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-
             // Expectations
             when(goalService.save(goalTitle, goalDescription, PriorityToAttain.HIGH, dateNow, BigDecimal.ZERO)).thenReturn(savedGoal);
 
@@ -400,10 +391,269 @@ public class GoalAPITest {
         }
     }
 
-    // saveNewGoalDiaryNote()
+    @Test
+    public void saveNewGoalDiaryNote_invalidGeoLocation_400BadRequestResponse() throws ServiceException {
+        try {
+            String goalDiaryNoteText = "New Goal Diary Note";
 
-    // updateGoal()
+            // Expectations
+            when(goalService.getGoal(goalOne.getId())).thenReturn(goalOne);
 
-    // deleteGoal()
+            // Call the actual method under test
+            Response response = goalAPI.saveNewGoalDiaryNote(goalOne.getId(),
+                    goalDiaryNoteText,
+                    new LocalDateParam(LocalDate.now()),
+                    true,
+                    -10.0,
+                    200.0);
 
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(goalOne.getId());
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.BAD_REQUEST.getStatusCode())));
+            assertThat(response.getStatusInfo().getReasonPhrase(), is(equalTo("Bad Request")));
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void saveNewGoalDiaryNote_problemPersistingGoal_500StatusAndInternalServerMsg() {
+        try {
+            String goalDiaryNoteText = "New Goal Diary Note";
+
+            // Expectations
+            when(goalService.getGoal(goalOne.getId())).thenReturn(goalOne);
+            when(goalService.update(any())).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = goalAPI.saveNewGoalDiaryNote(goalOne.getId(),
+                                                             goalDiaryNoteText,
+                                                             new LocalDateParam(LocalDate.now()),
+                                                             true,
+                                                              null,
+                                                              null);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(goalOne.getId());
+            verify(goalService).update(any());
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void saveNewGoalDiaryNote_newGoalDiaryNote_201StatusAndCreatedMsg() {
+        try {
+            String goalDiaryNoteText = "New Goal Diary Note";
+
+            goalOne.getDiaryNotes().add(new DiaryNote());
+
+            // Expectations
+            when(goalService.getGoal(goalOne.getId())).thenReturn(goalOne);
+            when(goalService.update(any())).thenReturn(goalOne);
+
+            // Call the actual method under test
+            Response response = goalAPI.saveNewGoalDiaryNote(goalOne.getId(),
+                    goalDiaryNoteText,
+                    new LocalDateParam(LocalDate.now()),
+                    true,
+                    null,
+                    null);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(goalOne.getId());
+            verify(goalService).update(any());
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.OK.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(notNullValue()));
+
+            Goal returnedUpdatedGoal = (Goal)respEntity;
+
+            assertThat(returnedUpdatedGoal.getDiaryNotes().size(), is(equalTo(2)));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void updateGoal_nonPreExistingGoal_404StatusAndNotFoundMsgReturned() {
+        try {
+            // Expectations
+            when(goalService.getGoal(nonExistingId)).thenReturn(null);
+
+            // Call the actual method under test
+            Response response = goalAPI.updateGoal(nonExistingId, goalTitle, goalDescription, PriorityToAttain.HIGH, localDateParam, BigDecimal.ZERO);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(nonExistingId);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.NOT_FOUND.getStatusCode())));
+            assertThat(response.getStatusInfo().getReasonPhrase(), is(equalTo("Not Found")));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void updateGoal_problemUpdatingGoalInDB_500StatusAndInternalServerMsg() {
+        try {
+            // Expectations
+            when(goalService.getGoal(existingId)).thenReturn(savedGoal);
+            when(goalService.update(existingId, goalTitle, goalDescription, PriorityToAttain.HIGH, dateNow, BigDecimal.ZERO)).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = goalAPI.updateGoal(existingId, goalTitle, goalDescription, PriorityToAttain.HIGH, localDateParam, BigDecimal.ZERO);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(existingId);
+            verify(goalService).update(existingId, goalTitle, goalDescription, PriorityToAttain.HIGH, dateNow, BigDecimal.ZERO);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void updateGoal_preExistingGoal_200StatusAndUpdatedGoalReturned() {
+        try {
+            // Expectations
+            when(goalService.getGoal(existingId)).thenReturn(savedGoal);
+            when(goalService.update(existingId, goalTitle, goalDescription, PriorityToAttain.HIGH, dateNow, BigDecimal.ZERO)).thenReturn(updatedGoal);
+
+            // Call the actual method under test
+            Response response = goalAPI.updateGoal(existingId, goalTitle, goalDescription, PriorityToAttain.HIGH, localDateParam, BigDecimal.ZERO);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(existingId);
+            verify(goalService).update(existingId, goalTitle, goalDescription, PriorityToAttain.HIGH, dateNow, BigDecimal.ZERO);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.OK.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(notNullValue()));
+
+            Goal updatedGoalReturned = (Goal)respEntity;
+
+            assertThat(updatedGoalReturned, is(notNullValue()));
+            assertThat(updatedGoalReturned.getId(), is(equalTo(existingId)));
+            assertThat(updatedGoalReturned.getGoalTitle(), is(equalTo(updatedGoalTitle)));
+            assertThat(updatedGoalReturned.getDescription(), is(equalTo(goalDescription)));
+
+            assertThat(updatedGoalReturned, is(equalTo(updatedGoal)));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void deleteGoal_nonPreExistingGoal_404StatusAndNotFoundMsgReturned() {
+        try {
+            // Expectations
+            when(goalService.getGoal(nonExistingId)).thenReturn(null);
+
+            // Call the actual method under test
+            Response response = goalAPI.deleteGoal(nonExistingId);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(nonExistingId);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.NOT_FOUND.getStatusCode())));
+            assertThat(response.getStatusInfo().getReasonPhrase(), is(equalTo("Not Found")));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void deleteGoal_problemDeletingGoalInDB_500StatusAndInternalServerMsg() {
+        try {
+            // Expectations
+            when(goalService.getGoal(existingId)).thenReturn(savedGoal);
+            when(goalService.delete(savedGoal)).thenThrow(new ServiceException(SERVER_ERROR));
+
+            // Call the actual method under test
+            Response response = goalAPI.deleteGoal(existingId);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(existingId);
+            verify(goalService).delete(savedGoal);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
+
+    @Test
+    public void deleteGoal_preExistingGoal_200Status() {
+        try {
+            // Expectations
+            when(goalService.getGoal(existingId)).thenReturn(savedGoal);
+            when(goalService.delete(savedGoal)).thenReturn(true);
+
+            // Call the actual method under test
+            Response response = goalAPI.deleteGoal(existingId);
+
+            // Verify (and Validation)
+            assertThat(response, is(notNullValue()));
+
+            verify(goalService).getGoal(existingId);
+            verify(goalService).delete(savedGoal);
+
+            assertThat(response.getStatus(), is(equalTo(Response.Status.OK.getStatusCode())));
+
+            Object respEntity = response.getEntity();
+
+            assertThat(respEntity, is(nullValue()));
+        } catch (final ServiceException se) {
+            fail("No ServiceException should've been thrown");
+        }
+    }
 }
