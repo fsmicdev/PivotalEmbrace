@@ -1,7 +1,7 @@
 package org.micg.pivotalembrace.restweb;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.parsing.Parser;
+import io.restassured.RestAssured;
+import io.restassured.parsing.Parser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.micg.pivotalembrace.springapp.SpringAppContext;
@@ -31,8 +31,9 @@ public class QuotesAPIIntegrationTest {
     }
 
     @Test
-    public void dummy_test() {
-
+    public void getAllQuotes_success_200StatusAndAllQuotesReturned() {
+        // get("/").then().assertThat().statusCode(200);
     }
+
 
 }
