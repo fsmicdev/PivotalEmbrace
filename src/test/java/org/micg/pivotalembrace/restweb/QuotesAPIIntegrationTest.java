@@ -20,12 +20,11 @@ import static org.micg.pivotalembrace.util.IntegrationTestConstants.SERVER_PORT;
 import static org.micg.pivotalembrace.util.IntegrationTestConstants.APP_BASE_PATH;
 
 import static io.restassured.RestAssured.*;
-import static io.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
 /**
- * End-to-end (REST to DB) Integration Test for the <code>QuotesAPI</code> REST API.
+ * End-to-end (REST to DB) Integration Test for the <code>QuotesAPI</code> REST  API.
  *
  * @author fsmicdev
  */
@@ -99,6 +98,28 @@ public class QuotesAPIIntegrationTest {
         assertThat(jsonAsMap.size(), equalTo(3));
         assertThat(jsonAsMap.get("person"), equalTo("Albert Einstein"));
         assertThat(jsonAsMap.get("quote"), equalTo("Anyone who has never made a mistake has never tried anything new."));
+    }
+
+    @Test
+    public void getAllAuthorsAndAuthorQuoteCount_success_200StatusAndAuthorAndQuotesCountReturned() {
+        Response response = given().
+                when().
+                get("/person/quotecount").
+                then().
+                contentType(ContentType.JSON).
+                statusCode(200).
+                extract().
+                response();
+
+        String jsonResponseAsStr = response.asString();
+
+        Map<String, Integer> jsonAsMap = from(jsonResponseAsStr).get("");
+
+        assertThat(jsonAsMap.size(), greaterThan(1));
+
+        assertThat(jsonAsMap.get("Albert Einstein"), greaterThan(1));
+
+        assertThat(jsonAsMap.get("Martin Fowler"), greaterThan(0));
     }
 
 }
